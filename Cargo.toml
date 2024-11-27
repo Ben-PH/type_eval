@@ -1,0 +1,7 @@
+[package]
+name = "tn_direct"
+version = "0.1.0"
+edition = "2021"
+
+[build-dependencies]
+bitvec = "1.0.1"
