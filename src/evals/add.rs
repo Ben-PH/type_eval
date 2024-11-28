@@ -1,7 +1,7 @@
 //! basics operation outputs such as B1 + B0 and visa versa, boolean algebras, etc
 
 use crate::{
-    op_types::{Add, BitOr}, Bit, Eval, Formula, UInt, Unsigned, B0, B1
+    op_types::{Add, BitOr}, Bit, BitNot, Eval, Formula, UInt, Unsigned, B0, B1
 };
 impl<B: Bit + Formula> Formula for BitOr<B, B1, Eval> {
     type Output = B1;
@@ -9,7 +9,6 @@ impl<B: Bit + Formula> Formula for BitOr<B, B1, Eval> {
 impl Formula for BitOr<B1, B0, Eval> {
     type Output = B1;
 }
-
 impl Formula for Add<B0, B1, Eval> {
     type Output = B1;
 }
