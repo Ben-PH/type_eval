@@ -25,6 +25,13 @@ where
     type Output = UInt<<Add<L::Output, B1> as Formula>::Output, B0>;
 }
 
+impl<L> Formula for Add<UInt<L, B0>, B1>
+where
+    L: Formula,
+    // Add<L, B1>: Formula,
+{
+    type Output = UInt<L, B1>;
+}
 #[cfg(test)]
 mod test {
     use crate::{Eval, Formula, U1, U2, U3, U4};
@@ -36,7 +43,10 @@ mod test {
         const fn _eval_2<F: Formula<Output = U2>>() {}
         const _ADD: () = _eval_2::<Add<U1, U1>>();
 
+        const fn _eval_3<F: Formula<Output = U3>>() {}
+        const _ADD_3: () = _eval_3::<Add<U2, U1>>();
+
         const fn _eval_4<F: Formula<Output = U4>>() {}
-        const _ADD_ADD_4: () = _eval_4::<Add<U3, U1, Eval>>();
+        const _ADD_4: () = _eval_4::<Add<U3, U1, Eval>>();
     }
 }
