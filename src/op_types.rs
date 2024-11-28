@@ -1,6 +1,6 @@
 use core::marker::PhantomData;
 
-use crate::{Ast, Eval, Formula, Mode, Unsigned};
+use crate::{Ast, Formula, Mode, Unsigned};
 
 pub struct BitAnd<L: Formula, R: Formula, M: Mode = Ast> {
     _l: PhantomData<L>,

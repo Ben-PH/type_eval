@@ -1,16 +1,17 @@
 
 mod formula_traits;
-use formula_traits::*;
+pub use formula_traits::*;
 
 mod val_types;
-use val_types::*;
+pub use val_types::*;
 
 mod evals;
 include!(concat!(env!("OUT_DIR"), "/consts.rs"));
+pub use consts::*;
 
 
 mod op_types;
-mod complex_evals;
+pub use op_types::*;
 
 pub struct Ast;
 pub struct Eval;
