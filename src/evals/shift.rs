@@ -1,5 +1,7 @@
-use crate::{op_types::{ShL, ShR}, Bit, Eval, Formula, UInt, Unsigned, B0};
-
+use crate::{
+    op_types::{ShL, ShR},
+    Bit, Eval, Formula, UInt, Unsigned, B0,
+};
 
 impl<U> Formula for ShL<U, Eval>
 where
