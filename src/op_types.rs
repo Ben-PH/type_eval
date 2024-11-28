@@ -1,23 +1,23 @@
 use core::marker::PhantomData;
 
-use crate::{Ast, Formula, Mode, Unsigned};
+use crate::{Ast, Bit, Mode, Unsigned};
 
-pub struct BitAnd<L: Formula, R: Formula, M: Mode = Ast> {
+pub struct BitAnd<L: Bit, R: Bit, M: Mode = Ast> {
     _l: PhantomData<L>,
     _r: PhantomData<R>,
     _m: PhantomData<M>,
 }
-pub struct BitOr<L: Formula, R: Formula, M: Mode = Ast> {
+pub struct BitOr<L: Bit, R: Bit, M: Mode = Ast> {
     _l: PhantomData<L>,
     _r: PhantomData<R>,
     _m: PhantomData<M>,
 }
 
-pub struct BitAdd<L: Formula, R: Formula, M: Mode = Ast> {
-    _l: PhantomData<L>,
-    _r: PhantomData<R>,
+pub struct BitNot<B: Bit, M: Mode = Ast> {
+    _b: PhantomData<B>,
     _m: PhantomData<M>,
 }
+
 pub struct Add<L: Unsigned, R: Unsigned, M: Mode = Ast> {
     _lhs: PhantomData<L>,
     _rhs: PhantomData<R>,

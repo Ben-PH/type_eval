@@ -21,3 +21,4 @@ impl NonZero for B1 {}
 impl<U: Unsigned, B: Bit> NonZero for UInt<U, B> {}
 
 impl<U: Unsigned, B: Bit> Unsigned for UInt<U, B> {}
+
