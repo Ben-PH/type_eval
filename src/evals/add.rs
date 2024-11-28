@@ -31,13 +31,18 @@ where
 {
     type Output = UInt<L, B1>;
 }
+#[cfg(test)]
+mod test {
+    use crate::{Eval, Formula, U1, U2, U3, U4};
 
-impl<L> Formula for Add<UInt<L, B1>, B1, Eval>
-where
-    L: Unsigned,
-    UInt<L, B1>: Formula + Unsigned,
-    Add<L, B1>: Formula + Unsigned,
-    UInt<Add<L, B1>, B0>: Formula + Unsigned,
-{
-    type Output = UInt<Add<L, B1>, B0>;
+    use super::Add;
+
+    #[test]
+    fn compile_basic_add() {
+        const fn _eval_2<F: Formula<Output = U2>>() {}
+        const _ADD: () = _eval_2::<Add<U1, U1>>();
+
+        const fn _eval_4<F: Formula<Output = U4>>() {}
+        const _ADD_ADD_4: () = _eval_4::<Add<U3, U1, Eval>>();
+    }
 }
