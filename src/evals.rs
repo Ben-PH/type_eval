@@ -4,6 +4,7 @@ mod bit_or;
 mod shift;
 mod sub;
 mod mul;
+mod trim;
 // pub use add::*;
 // pub use sub::*;
 // pub use shift::*;
