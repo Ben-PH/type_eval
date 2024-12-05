@@ -2,7 +2,11 @@
 
 use core::marker::PhantomData;
 
-use crate::{Ast, Eval, Formula, Mode, UInt, B0, B1};
+use crate::{Ast, Eval, Formula, Mode};
+
+mod bit_bit_adds;
+mod int_bit_adds;
+mod int_int_adds;
 
 pub struct Add<L, R, M: Mode = Ast> {
     _lhs: PhantomData<L>,
@@ -15,70 +19,6 @@ where
     Add<L::FOutput, R::FOutput, Eval>: Formula,
 {
     type FOutput = <Add<L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
-}
-impl Formula for Add<B0, B0, Eval> {
-    type FOutput = B0;
-}
-impl Formula for Add<B0, B1, Eval> {
-    type FOutput = B1;
-}
-impl Formula for Add<B1, B0, Eval> {
-    type FOutput = B1;
-}
-impl Formula for Add<B1, B1, Eval> {
-    type FOutput = UInt<B1, B0>;
-}
-
-impl Formula for Add<UInt<B1, B0>, B1, Eval> {
-    type FOutput = UInt<B1, B1>;
-}
-impl Formula for Add<UInt<B1, B1>, B1, Eval> {
-    type FOutput = UInt<UInt<B1, B0>, B0>;
-}
-impl<L, R> Formula for Add<UInt<UInt<L, R>, B0>, B1, Eval> {
-    type FOutput = UInt<UInt<L, R>, B1>;
-}
-impl<L, R> Formula for Add<UInt<UInt<L, R>, B1>, B1, Eval> {
-    type FOutput = UInt<Add<UInt<L, R>, B1>, B0>;
-}
-impl<L, R> Formula for Add<B1, UInt<L, R>, Eval>
-where
-    Add<UInt<L, R>, B1>: Formula,
-{
-    type FOutput = <Add<UInt<L, R>, B1> as Formula>::FOutput;
-}
-
-impl<L, R> Formula for Add<B0, UInt<L, R>, Eval>
-where
-    Add<UInt<L, R>, B0>: Formula,
-{
-    type FOutput = <Add<UInt<L, R>, B0> as Formula>::FOutput;
-}
-
-// adding nums to nums
-impl<LB, RB> Formula for Add<UInt<LB, B0>, UInt<RB, B0>, Eval>
-where
-    Add<LB, RB>: Formula,
-{
-    type FOutput = UInt<<Add<LB, RB> as Formula>::FOutput, B0>;
-}
-impl<LB, RB> Formula for Add<UInt<LB, B0>, UInt<RB, B1>, Eval>
-where
-    Add<LB, RB, Eval>: Formula,
-{
-    type FOutput = UInt<<Add<LB, RB, Eval> as Formula>::FOutput, B1>;
-}
-impl<LB, RB> Formula for Add<UInt<LB, B1>, UInt<RB, B0>, Eval>
-where
-    Add<LB, RB, Eval>: Formula,
-{
-    type FOutput = UInt<<Add<LB, RB, Eval> as Formula>::FOutput, B1>;
-}
-impl<LB, RB> Formula for Add<UInt<LB, B1>, UInt<RB, B1>, Eval>
-where
-    Add<LB, RB, Eval>: Formula,
-{
-    type FOutput = UInt<<Add<LB, RB, Eval> as Formula>::FOutput, B0>;
 }
 
 #[cfg(test)]

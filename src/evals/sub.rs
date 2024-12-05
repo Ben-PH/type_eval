@@ -1,7 +1,10 @@
 use core::marker::PhantomData;
 
-use crate::{Ast, Eval, Formula, Mode, UInt, B0, B1};
+use crate::{Ast, Eval, Formula, Mode};
 
+mod bit_sub;
+mod int_bit_sub;
+mod int_int_sub;
 pub struct Sub<L, R, M: Mode = Ast> {
     _lhs: PhantomData<L>,
     _rhs: PhantomData<R>,
@@ -14,47 +17,10 @@ where
 {
     type FOutput = <Sub<L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
 }
-impl Formula for Sub<B0, B0, Eval> {
-    type FOutput = B0;
-}
-impl Formula for Sub<B1, B0, Eval> {
-    type FOutput = B1;
-}
-impl Formula for Sub<B1, B1, Eval> {
-    type FOutput = B0;
-}
-
-impl Formula for Sub<UInt<B1, B0>, B1, Eval> {
-    type FOutput = B1;
-}
-impl<L> Formula for Sub<UInt<L, B1>, B1, Eval> {
-    type FOutput = UInt<L, B0>;
-}
-impl<L, R> Formula for Sub<UInt<L, R>, B0, Eval> {
-    type FOutput = UInt<L, R>;
-}
-impl<LB, RB> Formula for Sub<UInt<LB, B0>, UInt<RB, B0>, Eval>
-where
-    Sub<LB, RB>: Formula,
-{
-    type FOutput = UInt<<Sub<LB, RB> as Formula>::FOutput, B0>;
-}
-impl<LB, RB> Formula for Sub<UInt<LB, B1>, UInt<RB, B0>, Eval>
-where
-    Sub<LB, RB>: Formula,
-{
-    type FOutput = UInt<<Sub<LB, RB> as Formula>::FOutput, B1>;
-}
-impl<LB, RB> Formula for Sub<UInt<LB, B1>, UInt<RB, B1>, Eval>
-where
-    Sub<LB, RB>: Formula,
-{
-    type FOutput = UInt<<Sub<LB, RB> as Formula>::FOutput, B0>;
-}
 
 #[cfg(test)]
 mod test {
-    use crate::{evals::trim::Trim, Formula, U0, U1, U2, U3, U4};
+    use crate::{Formula, U0, U1, U2, U3, U4};
 
     use super::Sub;
 
