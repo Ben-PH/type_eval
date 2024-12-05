@@ -8,6 +8,6 @@ pub(crate) struct Trim<F, M: Mode = Ast> {
     _mode: PhantomData<M>,
 }
 impl<L: Formula> Formula for Trim<UInt<B0, L>, Eval> {
-    type Output = L::Output;
+    type FOutput = L::FOutput;
 }
 

@@ -10,49 +10,49 @@ pub struct Sub<L, R, M: Mode = Ast> {
 
 impl<L: Formula, R: Formula> Formula for Sub<L, R>
 where
-    Sub<L::Output, R::Output, Eval>: Formula,
+    Sub<L::FOutput, R::FOutput, Eval>: Formula,
 {
-    type Output =<Sub<L::Output, R::Output, Eval> as Formula>::Output;
+    type FOutput =<Sub<L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
 }
 impl Formula for Sub<B0, B0, Eval> {
-    type Output = B0;
+    type FOutput = B0;
 }
 impl Formula for Sub<B1, B0, Eval> {
-    type Output = B1;
+    type FOutput = B1;
 }
 impl Formula for Sub<B1, B1, Eval> {
-    type Output = B0;
+    type FOutput = B0;
 }
 
 impl Formula for Sub<UInt<B1, B0>, B1, Eval>
 {
-    type Output = B1;
+    type FOutput = B1;
 }
 impl<L> Formula for Sub<UInt<L, B1>, B1, Eval>
 {
-    type Output = UInt<L, B0>;
+    type FOutput = UInt<L, B0>;
 }
 impl<L, R> Formula for Sub<UInt<L, R>, B0, Eval>
 {
-    type Output = UInt<L, R>;
+    type FOutput = UInt<L, R>;
 }
 impl<LB, RB> Formula for Sub<UInt<LB, B0>, UInt<RB, B0>, Eval>
 where
     Sub<LB, RB>: Formula,
 {
-    type Output = UInt<<Sub<LB, RB> as Formula>::Output, B0>;
+    type FOutput = UInt<<Sub<LB, RB> as Formula>::FOutput, B0>;
 }
 impl<LB, RB> Formula for Sub<UInt<LB, B1>, UInt<RB, B0>, Eval>
 where
     Sub<LB, RB>: Formula,
 {
-    type Output = UInt<<Sub<LB, RB> as Formula>::Output, B1>;
+    type FOutput = UInt<<Sub<LB, RB> as Formula>::FOutput, B1>;
 }
 impl<LB, RB> Formula for Sub<UInt<LB, B1>, UInt<RB, B1>, Eval>
 where
     Sub<LB, RB>: Formula,
 {
-    type Output = UInt<<Sub<LB, RB> as Formula>::Output, B0>;
+    type FOutput = UInt<<Sub<LB, RB> as Formula>::FOutput, B0>;
 }
 
 #[cfg(test)]
@@ -61,10 +61,10 @@ mod test {
 
     use super::Sub;
 
-    const fn _eval_0<F: Formula<Output = U0>>() {}
-    const fn _eval_1<F: Formula<Output = U1>>() {}
-    const fn _eval_2<F: Formula<Output = U2>>() {}
-    const fn _eval_3<F: Formula<Output = U3>>() {}
+    const fn _eval_0<F: Formula<FOutput = U0>>() {}
+    const fn _eval_1<F: Formula<FOutput = U1>>() {}
+    const fn _eval_2<F: Formula<FOutput = U2>>() {}
+    const fn _eval_3<F: Formula<FOutput = U3>>() {}
     #[test]
     fn compile_basic_sub() {
         const _1_SUB_1: () = _eval_0::<Sub<U1, U1>>();

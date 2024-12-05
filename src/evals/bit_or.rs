@@ -12,20 +12,20 @@ impl<L, R> Formula for BitOr<L, R>
 where
     L: Formula,
     R: Formula,
-    BitOr<L::Output, R::Output, Eval>: Formula,
+    BitOr<L::FOutput, R::FOutput, Eval>: Formula,
 {
-    type Output = <BitOr<L::Output, R::Output, Eval> as Formula>::Output;
+    type FOutput = <BitOr<L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
 }
 
 impl Formula for BitOr<B0, B0> {
-    type Output = B0;
+    type FOutput = B0;
 }
 impl Formula for BitOr<B0, B1> {
-    type Output = B1;
+    type FOutput = B1;
 }
 impl Formula for BitOr<B1, B0> {
-    type Output = B1;
+    type FOutput = B1;
 }
 impl Formula for BitOr<B1, B1> {
-    type Output = B1;
+    type FOutput = B1;
 }

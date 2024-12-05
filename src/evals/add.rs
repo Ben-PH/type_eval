@@ -12,51 +12,51 @@ pub struct Add<L, R, M: Mode = Ast> {
 
 impl<L: Formula, R: Formula> Formula for Add<L, R>
 where
-    Add<L::Output, R::Output, Eval>: Formula,
+    Add<L::FOutput, R::FOutput, Eval>: Formula,
 {
-    type Output =<Add<L::Output, R::Output, Eval> as Formula>::Output;
+    type FOutput =<Add<L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
 }
 impl Formula for Add<B0, B0, Eval> {
-    type Output = B0;
+    type FOutput = B0;
 }
 impl Formula for Add<B0, B1, Eval> {
-    type Output = B1;
+    type FOutput = B1;
 }
 impl Formula for Add<B1, B0, Eval> {
-    type Output = B1;
+    type FOutput = B1;
 }
 impl Formula for Add<B1, B1, Eval> {
-    type Output = UInt<B1, B0>;
+    type FOutput = UInt<B1, B0>;
 }
 
 impl Formula for Add<UInt<B1, B0>, B1, Eval>
 {
-    type Output = UInt<B1, B1>;
+    type FOutput = UInt<B1, B1>;
 }
 impl Formula for Add<UInt<B1, B1>, B1, Eval>
 {
-    type Output = UInt<UInt<B1, B0>, B0>;
+    type FOutput = UInt<UInt<B1, B0>, B0>;
 }
 impl<L, R> Formula for Add<UInt<UInt<L, R>, B0>, B1, Eval>
 {
-    type Output = UInt<UInt<L, R>, B1>;
+    type FOutput = UInt<UInt<L, R>, B1>;
 }
 impl<L, R> Formula for Add<UInt<UInt<L, R>, B1>, B1, Eval>
 {
-    type Output = UInt<Add<UInt<L, R>, B1>, B0>;
+    type FOutput = UInt<Add<UInt<L, R>, B1>, B0>;
 }
 impl<L, R> Formula for Add<B1, UInt<L, R>, Eval>
 where
     Add<UInt<L, R>, B1>: Formula,
 {
-    type Output = <Add<UInt<L, R>, B1> as Formula>::Output;
+    type FOutput = <Add<UInt<L, R>, B1> as Formula>::FOutput;
 }
 
 impl<L, R> Formula for Add<B0, UInt<L, R>, Eval>
 where
     Add<UInt<L, R>, B0>: Formula,
 {
-    type Output = <Add<UInt<L, R>, B0> as Formula>::Output;
+    type FOutput = <Add<UInt<L, R>, B0> as Formula>::FOutput;
 }
 
 // adding nums to nums
@@ -64,25 +64,25 @@ impl<LB, RB> Formula for Add<UInt<LB, B0>, UInt<RB, B0>, Eval>
 where
     Add<LB, RB>: Formula,
 {
-    type Output = UInt<<Add<LB, RB> as Formula>::Output, B0>;
+    type FOutput = UInt<<Add<LB, RB> as Formula>::FOutput, B0>;
 }
 impl<LB, RB> Formula for Add<UInt<LB, B0>, UInt<RB, B1>, Eval>
 where
     Add<LB, RB, Eval>: Formula,
 {
-    type Output = UInt<<Add<LB, RB, Eval> as Formula>::Output, B1>;
+    type FOutput = UInt<<Add<LB, RB, Eval> as Formula>::FOutput, B1>;
 }
 impl<LB, RB> Formula for Add<UInt<LB, B1>, UInt<RB, B0>, Eval>
 where
     Add<LB, RB, Eval>: Formula,
 {
-    type Output = UInt<<Add<LB, RB, Eval> as Formula>::Output, B1>;
+    type FOutput = UInt<<Add<LB, RB, Eval> as Formula>::FOutput, B1>;
 }
 impl<LB, RB> Formula for Add<UInt<LB, B1>, UInt<RB, B1>, Eval>
 where
     Add<LB, RB, Eval>: Formula,
 {
-    type Output = UInt<<Add<LB, RB, Eval> as Formula>::Output, B0>;
+    type FOutput = UInt<<Add<LB, RB, Eval> as Formula>::FOutput, B0>;
 }
 
 
@@ -92,11 +92,11 @@ mod test {
 
     use super::Add;
 
-    const fn _eval_2<F: Formula<Output = U2>>() {}
-    const fn _eval_3<F: Formula<Output = U3>>() {}
-    const fn _eval_4<F: Formula<Output = U4>>() {}
-    const fn _eval_5<F: Formula<Output = U5>>() {}
-    const fn _eval_add<F: Formula<Output = Add<U1, U1>>>(){}
+    const fn _eval_2<F: Formula<FOutput = U2>>() {}
+    const fn _eval_3<F: Formula<FOutput = U3>>() {}
+    const fn _eval_4<F: Formula<FOutput = U4>>() {}
+    const fn _eval_5<F: Formula<FOutput = U5>>() {}
+    const fn _eval_add<F: Formula<FOutput = Add<U1, U1>>>(){}
     #[test]
     fn compile_basic_add() {
         const _ADD: () = _eval_2::<Add<U1, U1>>();

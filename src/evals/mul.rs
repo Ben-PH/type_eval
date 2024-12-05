@@ -17,26 +17,26 @@ pub struct MulAcc<Acc, L, R, M: Mode = Ast> {
 
 impl<Acc: Formula, R: Formula> Formula for MulAcc<Acc, B0, R>
 {
-    type Output = Acc;
+    type FOutput = Acc;
 }
 impl<L: Formula, R: Formula> Formula for Mul<L, R>
 where
-    MulAcc<B0, L::Output, R::Output, Eval>: Formula,
+    MulAcc<B0, L::FOutput, R::FOutput, Eval>: Formula,
 {
-    type Output =<MulAcc<B0, L::Output, R::Output, Eval> as Formula>::Output;
+    type FOutput =<MulAcc<B0, L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
 }
 impl<L: Formula, R: Formula> Formula for Mul<L, R>
 where
-    Mul<L::Output, R::Output, Eval>: Formula,
+    Mul<L::FOutput, R::FOutput, Eval>: Formula,
 {
-    type Output =<Mul<L::Output, R::Output, Eval> as Formula>::Output;
+    type FOutput =<Mul<L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
 }
 impl<L> Formula for Mul<L, B0, Eval> {
-    type Output = B0;
+    type FOutput = B0;
 }
 impl Formula for Mul<B0, B1, Eval> {
-    type Output = B1;
+    type FOutput = B1;
 }
 impl Formula for Mul<B1, B1, Eval> {
-    type Output = B1;
+    type FOutput = B1;
 }
