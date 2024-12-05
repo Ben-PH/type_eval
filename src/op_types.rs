@@ -12,12 +12,6 @@ pub struct BitNot<B, M: Mode = Ast> {
     _m: PhantomData<M>,
 }
 
-pub struct Sub<L, R, M: Mode = Ast> {
-    _lhs: PhantomData<L>,
-    _rhs: PhantomData<R>,
-    _mode: PhantomData<M>,
-}
-
 pub struct ShL<U, M: Mode = Ast> {
     _tp: PhantomData<U>,
     _mode: PhantomData<M>,
