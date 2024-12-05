@@ -8,7 +8,7 @@ where
     U: Unsigned,
     UInt<U, B0>: Unsigned + Formula,
 {
-    type Output = UInt<U, B0>;
+    type FOutput = UInt<U, B0>;
 }
 
 impl<U, B> Formula for ShR<UInt<U, B>, Eval>
@@ -17,5 +17,5 @@ where
     U: Unsigned + Formula,
     UInt<U, B0>: Unsigned + Formula,
 {
-    type Output = U;
+    type FOutput = U;
 }
