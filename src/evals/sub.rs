@@ -12,7 +12,7 @@ impl<L: Formula, R: Formula> Formula for Sub<L, R>
 where
     Sub<L::FOutput, R::FOutput, Eval>: Formula,
 {
-    type FOutput =<Sub<L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
+    type FOutput = <Sub<L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
 }
 impl Formula for Sub<B0, B0, Eval> {
     type FOutput = B0;
@@ -24,16 +24,13 @@ impl Formula for Sub<B1, B1, Eval> {
     type FOutput = B0;
 }
 
-impl Formula for Sub<UInt<B1, B0>, B1, Eval>
-{
+impl Formula for Sub<UInt<B1, B0>, B1, Eval> {
     type FOutput = B1;
 }
-impl<L> Formula for Sub<UInt<L, B1>, B1, Eval>
-{
+impl<L> Formula for Sub<UInt<L, B1>, B1, Eval> {
     type FOutput = UInt<L, B0>;
 }
-impl<L, R> Formula for Sub<UInt<L, R>, B0, Eval>
-{
+impl<L, R> Formula for Sub<UInt<L, R>, B0, Eval> {
     type FOutput = UInt<L, R>;
 }
 impl<LB, RB> Formula for Sub<UInt<LB, B0>, UInt<RB, B0>, Eval>
@@ -57,7 +54,7 @@ where
 
 #[cfg(test)]
 mod test {
-    use crate::{Formula, U0, U1, U2, U3, U4};
+    use crate::{evals::trim::Trim, Formula, U0, U1, U2, U3, U4};
 
     use super::Sub;
 
@@ -79,10 +76,10 @@ mod test {
     }
     #[test]
     fn uint_add_uint() {
-        // const _2_SUB_2: () = _eval_0::<Sub<U2, U2>>();
-        // const _3_SUB_2: () = _eval_1::<Sub<U3, U2>>();
-        // const _3_SUB_3: () = _eval_0::<Sub<U3, U3>>();
+        const _2_SUB_2: () = _eval_0::<Sub<U2, U2>>();
+        const _3_SUB_2: () = _eval_1::<Sub<U3, U2>>();
+        const _3_SUB_3: () = _eval_0::<Sub<U3, U3>>();
         const _4_SUB_2: () = _eval_2::<Sub<U4, U2>>();
-        // const _4_SUB_3: () = _eval_1::<Sub<U4, U3>>();
+        const _4_SUB_3: () = _eval_1::<Sub<U4, U3>>();
     }
 }

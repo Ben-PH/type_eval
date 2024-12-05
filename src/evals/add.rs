@@ -14,7 +14,7 @@ impl<L: Formula, R: Formula> Formula for Add<L, R>
 where
     Add<L::FOutput, R::FOutput, Eval>: Formula,
 {
-    type FOutput =<Add<L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
+    type FOutput = <Add<L::FOutput, R::FOutput, Eval> as Formula>::FOutput;
 }
 impl Formula for Add<B0, B0, Eval> {
     type FOutput = B0;
@@ -29,20 +29,16 @@ impl Formula for Add<B1, B1, Eval> {
     type FOutput = UInt<B1, B0>;
 }
 
-impl Formula for Add<UInt<B1, B0>, B1, Eval>
-{
+impl Formula for Add<UInt<B1, B0>, B1, Eval> {
     type FOutput = UInt<B1, B1>;
 }
-impl Formula for Add<UInt<B1, B1>, B1, Eval>
-{
+impl Formula for Add<UInt<B1, B1>, B1, Eval> {
     type FOutput = UInt<UInt<B1, B0>, B0>;
 }
-impl<L, R> Formula for Add<UInt<UInt<L, R>, B0>, B1, Eval>
-{
+impl<L, R> Formula for Add<UInt<UInt<L, R>, B0>, B1, Eval> {
     type FOutput = UInt<UInt<L, R>, B1>;
 }
-impl<L, R> Formula for Add<UInt<UInt<L, R>, B1>, B1, Eval>
-{
+impl<L, R> Formula for Add<UInt<UInt<L, R>, B1>, B1, Eval> {
     type FOutput = UInt<Add<UInt<L, R>, B1>, B0>;
 }
 impl<L, R> Formula for Add<B1, UInt<L, R>, Eval>
@@ -85,7 +81,6 @@ where
     type FOutput = UInt<<Add<LB, RB, Eval> as Formula>::FOutput, B0>;
 }
 
-
 #[cfg(test)]
 mod test {
     use crate::{Formula, U0, U1, U2, U3, U4, U5};
@@ -96,7 +91,7 @@ mod test {
     const fn _eval_3<F: Formula<FOutput = U3>>() {}
     const fn _eval_4<F: Formula<FOutput = U4>>() {}
     const fn _eval_5<F: Formula<FOutput = U5>>() {}
-    const fn _eval_add<F: Formula<FOutput = Add<U1, U1>>>(){}
+    const fn _eval_add<F: Formula<FOutput = Add<U1, U1>>>() {}
     #[test]
     fn compile_basic_add() {
         const _ADD: () = _eval_2::<Add<U1, U1>>();

@@ -1,9 +1,9 @@
 pub(crate) mod add;
 mod bit_not;
 mod bit_or;
+mod mul;
 mod shift;
 mod sub;
-mod mul;
 mod trim;
 // pub use add::*;
 // pub use sub::*;
