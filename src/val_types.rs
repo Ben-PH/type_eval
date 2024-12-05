@@ -1,6 +1,6 @@
 use core::marker::PhantomData;
 
-use crate::{Formula, Unsigned};
+use crate::{Ast, Formula, Mode, Unsigned};
 
 pub trait Bit {}
 pub struct B0;
@@ -16,9 +16,10 @@ impl Formula for B1 {
     type FOutput = Self;
 }
 
-pub struct UInt<U, B> {
+pub struct UInt<U, B, M: Mode = Ast> {
     _trailing_bit: PhantomData<B>,
     _leading_bits: PhantomData<U>,
+    _mode: PhantomData<M>,
 }
 impl<U, B> Formula for UInt<U, B> {
     type FOutput = Self;
