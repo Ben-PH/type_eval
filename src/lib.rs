@@ -1,3 +1,4 @@
+#![recursion_limit = "1000"]
 use val_types::Number;
 
 // mod formula_traits;

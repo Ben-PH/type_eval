@@ -43,7 +43,7 @@ impl Expr for Add<_1, BitString<_1, _0>, Eval> {
 // ---
 // Carrying increment to a bit-string-literal
 // ---
-impl<B> Expr for Add<BitString<B, _1>, _1, Eval>
+impl<B:BitStrLit> Expr for Add<BitString<B, _1>, _1, Eval>
 where
     // B: BitStrLit,
     Add<B, _1>: Expr,
@@ -52,7 +52,7 @@ where
     type Output = BitString<<Add<B, _1> as Expr>::Output, _0>;
 }
 
-impl<B> Expr for Add<_1, BitString<B, _1>, Eval>
+impl<B:BitStrLit> Expr for Add<_1, BitString<B, _1>, Eval>
 where
     // B: BitStrLit,
     Add<B, _1>: Expr,
@@ -64,7 +64,7 @@ where
 // ---
 // Addition of two bit-string literals
 // ---
-impl<LB, RB> Expr for Add<BitString<LB, _0>, BitString<RB, _0>, Eval>
+impl<LB:BitStrLit, RB:BitStrLit> Expr for Add<BitString<LB, _0>, BitString<RB, _0>, Eval>
 where
     // LB: BitStrLit,
     // RB: BitStrLit,
@@ -73,7 +73,7 @@ where
 {
     type Output = BitString<<Add<LB, RB> as Expr>::Output, _0>;
 }
-impl<LB, RB> Expr for Add<BitString<LB, _0>, BitString<RB, _1>, Eval>
+impl<LB : BitStrLit, RB : BitStrLit> Expr for Add<BitString<LB, _0>, BitString<RB, _1>, Eval>
 where
     // LB: BitStrLit,
     // RB: BitStrLit,
@@ -82,7 +82,7 @@ where
 {
     type Output = BitString<<Add<LB, RB> as Expr>::Output, _1>;
 }
-impl<LB, RB> Expr for Add<BitString<LB, _1>, BitString<RB, _0>, Eval>
+impl<LB : BitStrLit, RB : BitStrLit> Expr for Add<BitString<LB, _1>, BitString<RB, _0>, Eval>
 where
     // LB: BitStrLit,
     // RB: BitStrLit,
@@ -91,7 +91,7 @@ where
 {
     type Output = BitString<<Add<LB, RB> as Expr>::Output, _1>;
 }
-impl<LB, RB> Expr for Add<BitString<LB, _1>, BitString<RB, _1>, Eval>
+impl<LB : BitStrLit, RB :BitStrLit> Expr for Add<BitString<LB, _1>, BitString<RB, _1>, Eval>
 where
     // LB: BitStrLit,
     // RB: BitStrLit,

@@ -5,7 +5,7 @@ use crate::Expr;
 pub trait Number {}
 pub struct _0;
 pub struct _1;
-pub struct BitString<Bs, B> {
+pub struct BitString<Bs : BitStrLit, B : BitLit> {
     _bits: PhantomData<Bs>,
     _last_bit: PhantomData<B>,
     // _m: PhantomData<M>,
