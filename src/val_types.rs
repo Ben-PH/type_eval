@@ -1,6 +1,6 @@
 use core::marker::PhantomData;
 
-use crate::{Ast, Expr, Mode};
+use crate::{Expr, ExprMode, Recurse};
 
 pub trait Number {}
 
@@ -9,7 +9,7 @@ pub struct _0;
 /// Literal representation of the 1-bit
 pub struct _1;
 /// Literal representation of a bit-string
-pub struct BitString<Bs, B, M: Mode = Ast> {
+pub struct BitString<Bs, B, M: ExprMode = Recurse> {
     _bits: PhantomData<Bs>,
     _last_bit: PhantomData<B>,
     _m: PhantomData<M>,
@@ -61,7 +61,7 @@ where
     Lhs: BitStrLit,
     B: BitLit,
 {
-    type Output = Self;
+    type Ret = Self;
 }
 
 /// subtractions can lead to `BitString`s with invalid number representations. For example:
@@ -78,14 +78,14 @@ impl<B> Expr for BitString<_0, B>
 where
     B: Number,
 {
-    type Output = B;
+    type Ret = B;
 }
 
 impl Expr for _0 {
-    type Output = _0;
+    type Ret = _0;
 }
 impl Expr for _1 {
-    type Output = _1;
+    type Ret = _1;
 }
 
 #[cfg(test)]
