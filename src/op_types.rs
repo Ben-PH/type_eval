@@ -1,13 +1,13 @@
 use core::marker::PhantomData;
 
-use crate::Ast;
+use crate::Recurse;
 
-pub struct Add<Lhs, Rhs, M = Ast> {
+pub struct Add<Lhs, Rhs, M = Recurse> {
     _l: PhantomData<Lhs>,
     _r: PhantomData<Rhs>,
     _m: PhantomData<M>,
 }
-pub struct Sub<Lhs, Rhs, M = Ast> {
+pub struct Sub<Lhs, Rhs, M = Recurse> {
     _l: PhantomData<Lhs>,
     _r: PhantomData<Rhs>,
     _m: PhantomData<M>,

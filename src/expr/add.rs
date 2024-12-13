@@ -1,95 +1,100 @@
 use crate::{
     op_types::Add,
     val_types::{BitStrLit, BitString, _0, _1},
-    Eval, Expr, ExprOut,
+    Base, ExpRet, Expr,
 };
 
 impl<L, R> Expr for Add<L, R>
 where
-    Add<L::Output, R::Output, Eval>: Expr,
+    Add<L::Ret, R::Ret, Base>: Expr,
     L: Expr,
     R: Expr,
 {
-    type Output = <Add<L::Output, R::Output, Eval> as Expr>::Output;
+    type Ret = <Add<L::Ret, R::Ret, Base> as Expr>::Ret;
 }
 
 // ----
 //  Most basic of addition evaluations
 // ----
-impl Expr for Add<_0, _0, Eval> {
-    type Output = _0;
+impl Expr for Add<_0, _0, Base> {
+    type Ret = _0;
 }
-impl Expr for Add<_0, _1, Eval> {
-    type Output = _1;
+impl Expr for Add<_0, _1, Base> {
+    type Ret = _1;
 }
-impl Expr for Add<_1, _0, Eval> {
-    type Output = _1;
+impl Expr for Add<_1, _0, Base> {
+    type Ret = _1;
 }
-impl Expr for Add<_1, _1, Eval> {
-    type Output = BitString<_1, _0>;
+impl Expr for Add<_1, _1, Base> {
+    type Ret = BitString<_1, _0>;
 }
 
 // ---
 // Non-carry bit-additions to bit-string literal
 // ---
-impl Expr for Add<BitString<_1, _0>, _1, Eval> {
-    type Output = BitString<_1, _1>;
+impl Expr for Add<BitString<_1, _0>, _1, Base> {
+    type Ret = BitString<_1, _1>;
 }
-impl Expr for Add<_1, BitString<_1, _0>, Eval> {
-    type Output = BitString<_1, _1>;
+impl Expr for Add<_1, BitString<_1, _0>, Base> {
+    type Ret = BitString<_1, _1>;
 }
 
 // ---
 // Carrying increment to a bit-string-literal
 // ---
-impl<B> Expr for Add<BitString<B, _1>, _1, Eval>
+impl<B> Expr for Add<BitString<B, _1>, _1, Base>
 where
+    // Recurse the carry
     Add<B, _1>: Expr,
-    ExprOut<Add<B, _1>>: BitStrLit,
+    // Ensure the carry recursion is a valid progression
+    ExpRet<Add<B, _1>>: BitStrLit,
 {
-    type Output = BitString<ExprOut<Add<B, _1>>, _0>;
+    type Ret = BitString<ExpRet<Add<B, _1>>, _0>;
 }
 
-impl<B> Expr for Add<_1, BitString<B, _1>, Eval>
+impl<B> Expr for Add<_1, BitString<B, _1>, Base>
 where
     Add<B, _1>: Expr,
-    ExprOut<Add<B, _1>>: BitStrLit,
+    ExpRet<Add<B, _1>>: BitStrLit,
 {
-    type Output = BitString<ExprOut<Add<B, _1>>, _0>;
+    type Ret = BitString<ExpRet<Add<B, _1>>, _0>;
 }
 
 // ---
 // Addition of two bit-string literals
 // ---
-impl<LB, RB> Expr for Add<BitString<LB, _0>, BitString<RB, _0>, Eval>
+/// (LB, 0) + (RB, 0) == ((LB + RB), 0)
+impl<LB, RB> Expr for Add<BitString<LB, _0>, BitString<RB, _0>, Base>
 where
     Add<LB, RB>: Expr,
-    ExprOut<Add<LB, RB>>: BitStrLit,
+    ExpRet<Add<LB, RB>>: BitStrLit,
 {
-    type Output = BitString<ExprOut<Add<LB, RB>>, _0>;
+    type Ret = BitString<ExpRet<Add<LB, RB>>, _0>;
 }
-impl<LB, RB> Expr for Add<BitString<LB, _0>, BitString<RB, _1>, Eval>
+/// (LB, 0) + (RB, 1) == ((LB + RB), 1)
+impl<LB, RB> Expr for Add<BitString<LB, _0>, BitString<RB, _1>, Base>
 where
     Add<LB, RB>: Expr,
-    ExprOut<Add<LB, RB>>: BitStrLit,
+    ExpRet<Add<LB, RB>>: BitStrLit,
 {
-    type Output = BitString<ExprOut<Add<LB, RB>>, _1>;
+    type Ret = BitString<ExpRet<Add<LB, RB>>, _1>;
 }
-impl<LB, RB> Expr for Add<BitString<LB, _1>, BitString<RB, _0>, Eval>
+impl<LB, RB> Expr for Add<BitString<LB, _1>, BitString<RB, _0>, Base>
 where
     Add<LB, RB>: Expr,
-    ExprOut<Add<LB, RB>>: BitStrLit,
+    ExpRet<Add<LB, RB>>: BitStrLit,
 {
-    type Output = BitString<ExprOut<Add<LB, RB>>, _1>;
+    type Ret = BitString<ExpRet<Add<LB, RB>>, _1>;
 }
-impl<LB, RB> Expr for Add<BitString<LB, _1>, BitString<RB, _1>, Eval>
+/// (LB, 1) + (RB, 1) == ((LB + RB) + 1, 1)
+impl<LB, RB> Expr for Add<BitString<LB, _1>, BitString<RB, _1>, Base>
 where
     Add<LB, RB>: Expr,
-    ExprOut<Add<LB, RB>>: Expr,
-    Add<ExprOut<ExprOut<Add<LB, RB>>>, _1>: Expr,
-    ExprOut<Add<ExprOut<ExprOut<Add<LB, RB>>>, _1>>: BitStrLit,
+    ExpRet<Add<LB, RB>>: Expr,
+    Add<ExpRet<ExpRet<Add<LB, RB>>>, _1>: Expr,
+    ExpRet<Add<ExpRet<ExpRet<Add<LB, RB>>>, _1>>: BitStrLit,
 {
-    type Output = BitString<ExprOut<Add<ExprOut<ExprOut<Add<LB, RB>>>, _1>>, _0>;
+    type Ret = BitString<ExpRet<Add<ExpRet<ExpRet<Add<LB, RB>>>, _1>>, _0>;
 }
 #[cfg(test)]
 mod test {
