@@ -4,9 +4,11 @@ use crate::{
     Eval, Expr, ExprOut,
 };
 
-impl<L: Expr, R: Expr> Expr for Add<L, R>
+impl<L, R> Expr for Add<L, R>
 where
     Add<L::Output, R::Output, Eval>: Expr,
+    L: Expr,
+    R: Expr,
 {
     type Output = <Add<L::Output, R::Output, Eval> as Expr>::Output;
 }
@@ -92,13 +94,7 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    const fn _b0<E: Expr<Output = _0>>() {}
-    const fn _b1<E: Expr<Output = _1>>() {}
-    const fn _b2<E: Expr<Output = BitString<_1, _0>>>() {}
-    const fn _b3<E: Expr<Output = BitString<_1, _1>>>() {}
-    const fn _b4<E: Expr<Output = BitString<BitString<_1, _0>, _0>>>() {}
-    const fn _b5<E: Expr<Output = BitString<BitString<_1, _0>, _1>>>() {}
-    const fn _b6<E: Expr<Output = BitString<BitString<_1, _1>, _0>>>() {}
+    use crate::test_res::*;
     #[test]
     fn eval_add() {
         const _0_ADD_0: () = _b0::<Add<_0, _0>>();
@@ -110,5 +106,6 @@ mod test {
         const _1_ADD_3: () = _b4::<Add<_1, BitString<_1, _1>>>();
         const _2_ADD_2: () = _b4::<Add<BitString<_1, _0>, BitString<_1, _0>>>();
         const _3_ADD_3: () = _b6::<Add<BitString<_1, _1>, BitString<_1, _1>>>();
+        const _7_ADD_1: () = _b8::<Add<BitString<BitString<_1, _1>, _1>, _1>>();
     }
 }

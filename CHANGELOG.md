@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Positive integers
+- Subtraction evaluation 
+- Addition evaluaton
 - `CHANGELOG.md`
 
 ### Marked for Deprecation
