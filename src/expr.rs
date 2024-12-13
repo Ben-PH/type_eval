@@ -1,4 +1,7 @@
-use crate::{val_types::{BitLit, BitStrLit, BitString, Number, _0}, Expr};
+use crate::{
+    val_types::{BitLit, BitStrLit, BitString, Number, _0},
+    Expr,
+};
 
 mod add;
 mod sub;
@@ -14,7 +17,7 @@ where
 // Evaluation of a straight-up bit-string literal
 impl<B> Expr for BitString<_0, B>
 where
-    B: Number
+    B: Number,
 {
     type Output = B;
 }

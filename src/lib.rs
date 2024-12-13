@@ -22,5 +22,6 @@ impl Mode for Eval {}
 pub trait Expr {
     type Output: Number;
 }
+type ExprOut<T> = <T as Expr>::Output;
 
 mod remys_gift;

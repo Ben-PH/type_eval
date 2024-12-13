@@ -1,7 +1,7 @@
 use crate::{
     op_types::Add,
     val_types::{BitStrLit, BitString, _0, _1},
-    Eval, Expr,
+    Eval, Expr, ExprOut,
 };
 
 impl<L: Expr, R: Expr> Expr for Add<L, R>
@@ -27,7 +27,6 @@ impl Expr for Add<_1, _1, Eval> {
     type Output = BitString<_1, _0>;
 }
 
-
 // ---
 // Non-carry bit-additions to bit-string literal
 // ---
@@ -38,27 +37,23 @@ impl Expr for Add<_1, BitString<_1, _0>, Eval> {
     type Output = BitString<_1, _1>;
 }
 
-
-
 // ---
 // Carrying increment to a bit-string-literal
 // ---
 impl<B> Expr for Add<BitString<B, _1>, _1, Eval>
 where
-    // B: BitStrLit,
     Add<B, _1>: Expr,
-    <Add<B, _1> as Expr>::Output: BitStrLit,
+    ExprOut<Add<B, _1>>: BitStrLit,
 {
-    type Output = BitString<<Add<B, _1> as Expr>::Output, _0>;
+    type Output = BitString<ExprOut<Add<B, _1>>, _0>;
 }
 
 impl<B> Expr for Add<_1, BitString<B, _1>, Eval>
 where
-    // B: BitStrLit,
     Add<B, _1>: Expr,
-    <Add<B, _1> as Expr>::Output: BitStrLit,
+    ExprOut<Add<B, _1>>: BitStrLit,
 {
-    type Output = BitString<<Add<B, _1> as Expr>::Output, _0>;
+    type Output = BitString<ExprOut<Add<B, _1>>, _0>;
 }
 
 // ---
@@ -66,42 +61,33 @@ where
 // ---
 impl<LB, RB> Expr for Add<BitString<LB, _0>, BitString<RB, _0>, Eval>
 where
-    // LB: BitStrLit,
-    // RB: BitStrLit,
     Add<LB, RB>: Expr,
-    <Add<LB, RB> as Expr>::Output: BitStrLit,
+    ExprOut<Add<LB, RB>>: BitStrLit,
 {
-    type Output = BitString<<Add<LB, RB> as Expr>::Output, _0>;
+    type Output = BitString<ExprOut<Add<LB, RB>>, _0>;
 }
 impl<LB, RB> Expr for Add<BitString<LB, _0>, BitString<RB, _1>, Eval>
 where
-    // LB: BitStrLit,
-    // RB: BitStrLit,
     Add<LB, RB>: Expr,
-    <Add<LB, RB> as Expr>::Output: BitStrLit,
+    ExprOut<Add<LB, RB>>: BitStrLit,
 {
-    type Output = BitString<<Add<LB, RB> as Expr>::Output, _1>;
+    type Output = BitString<ExprOut<Add<LB, RB>>, _1>;
 }
 impl<LB, RB> Expr for Add<BitString<LB, _1>, BitString<RB, _0>, Eval>
 where
-    // LB: BitStrLit,
-    // RB: BitStrLit,
     Add<LB, RB>: Expr,
-    <Add<LB, RB> as Expr>::Output: BitStrLit,
+    ExprOut<Add<LB, RB>>: BitStrLit,
 {
-    type Output = BitString<<Add<LB, RB> as Expr>::Output, _1>;
+    type Output = BitString<ExprOut<Add<LB, RB>>, _1>;
 }
 impl<LB, RB> Expr for Add<BitString<LB, _1>, BitString<RB, _1>, Eval>
 where
-    // LB: BitStrLit,
-    // RB: BitStrLit,
     Add<LB, RB>: Expr,
-    <Add<LB, RB> as Expr>::Output: Expr,
-    Add<<<Add<LB, RB> as Expr>::Output as Expr>::Output, _1>: Expr,
-    <Add<<<Add<LB, RB> as Expr>::Output as Expr>::Output, _1> as Expr>::Output: BitStrLit,
+    ExprOut<Add<LB, RB>>: Expr,
+    Add<ExprOut<ExprOut<Add<LB, RB>>>, _1>: Expr,
+    ExprOut<Add<ExprOut<ExprOut<Add<LB, RB>>>, _1>>: BitStrLit,
 {
-    type Output =
-        BitString<<Add<<<Add<LB, RB> as Expr>::Output as Expr>::Output, _1> as Expr>::Output, _0>;
+    type Output = BitString<ExprOut<Add<ExprOut<ExprOut<Add<LB, RB>>>, _1>>, _0>;
 }
 #[cfg(test)]
 mod test {
