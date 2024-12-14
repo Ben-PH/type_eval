@@ -12,6 +12,11 @@ pub struct Sub<Lhs, Rhs, M = Recurse> {
     _r: PhantomData<Rhs>,
     _m: PhantomData<M>,
 }
+pub struct Mul<Lhs, Rhs, M = Recurse> {
+    _l: PhantomData<Lhs>,
+    _r: PhantomData<Rhs>,
+    _m: PhantomData<M>,
+}
 // pub struct BitAnd<L, R, M: Mode = Ast> {
 //     _l: PhantomData<L>,
 //     _r: PhantomData<R>,

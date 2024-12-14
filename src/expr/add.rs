@@ -10,7 +10,7 @@ where
     L: Expr,
     R: Expr,
 {
-    type Ret = <Add<L::Ret, R::Ret, Base> as Expr>::Ret;
+    type Ret = ExpRet<Add<L::Ret, R::Ret, Base>>;
 }
 
 // ----
@@ -32,8 +32,11 @@ impl Expr for Add<_1, _1, Base> {
 // ---
 // Non-carry bit-additions to bit-string literal
 // ---
-impl Expr for Add<BitString<_1, _0>, _1, Base> {
-    type Ret = BitString<_1, _1>;
+impl<B> Expr for Add<BitString<B, _0>, _1, Base>
+where
+    B: BitStrLit,
+{
+    type Ret = BitString<B, _1>;
 }
 impl Expr for Add<_1, BitString<_1, _0>, Base> {
     type Ret = BitString<_1, _1>;
@@ -111,6 +114,7 @@ mod test {
         const _1_ADD_3: () = _b4::<Add<_1, BitString<_1, _1>>>();
         const _2_ADD_2: () = _b4::<Add<BitString<_1, _0>, BitString<_1, _0>>>();
         const _3_ADD_3: () = _b6::<Add<BitString<_1, _1>, BitString<_1, _1>>>();
+        const _6_ADD_1: () = _b7::<Add<BitString<BitString<_1, _1>, _0>, _1>>();
         const _7_ADD_1: () = _b8::<Add<BitString<BitString<_1, _1>, _1>, _1>>();
     }
 }

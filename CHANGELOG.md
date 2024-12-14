@@ -19,9 +19,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Marked for Deprecation
 
-## [v0.1.0]
+## [v0.1.0] (work in progress)
 
-> Initial releaso
+> Initial release
 
 ### Removed
 
@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Positive integers
 - Subtraction evaluation 
 - Addition evaluaton
+- Multiplication evaluaton
 - `CHANGELOG.md`
 
 ### Marked for Deprecation

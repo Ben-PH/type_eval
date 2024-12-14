@@ -1,3 +1,4 @@
+#![no_std]
 mod op_types;
 mod val_types;
 use val_types::Number;
@@ -28,7 +29,9 @@ mod test_res {
     pub(crate) const fn _b4<E: Expr<Ret = BitString<BitString<_1, _0>, _0>>>() {}
     pub(crate) const fn _b5<E: Expr<Ret = BitString<BitString<_1, _0>, _1>>>() {}
     pub(crate) const fn _b6<E: Expr<Ret = BitString<BitString<_1, _1>, _0>>>() {}
+    pub(crate) const fn _b7<E: Expr<Ret = BitString<BitString<_1, _1>, _1>>>() {}
     pub(crate) const fn _b8<E: Expr<Ret = BitString<BitString<BitString<_1, _0>, _0>, _0>>>() {}
+    pub(crate) const fn _b9<E: Expr<Ret = BitString<BitString<BitString<_1, _0>, _0>, _1>>>() {}
     #[test]
     fn eval_add() {
         const _0_0: () = _b0::<BitString<_0, _0>>();
