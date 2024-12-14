@@ -1,8 +1,8 @@
 use core::marker::PhantomData;
 
-use crate::{Expr, ExprMode, Recurse};
+use crate::{ExprMode, NumExpr, Recurse};
 
-pub trait Number {}
+pub trait NumberVal {}
 
 /// Literal representation of the 0-bit
 pub struct _0;
@@ -16,12 +16,12 @@ pub struct BitString<Bs, B, M: ExprMode = Recurse> {
 }
 
 /// Allows a 0-bit literal to represent a concrete number
-impl Number for _0 {}
+impl NumberVal for _0 {}
 /// Allows a 1-bit literal to represent a concrete number
-impl Number for _1 {}
+impl NumberVal for _1 {}
 /// For a BitString to be considered as a valid concrete number, it must be prepended with
 /// something that implements BitStrLit, and appended by a BitLit
-impl<Bs, B> Number for BitString<Bs, B>
+impl<Bs, B> NumberVal for BitString<Bs, B>
 where
     Bs: BitStrLit,
     B: BitLit,
@@ -56,7 +56,7 @@ where
 }
 
 /// A BitString that is already a valid number evaluates to itself
-impl<Lhs, B> Expr for BitString<Lhs, B>
+impl<Lhs, B> NumExpr for BitString<Lhs, B>
 where
     Lhs: BitStrLit,
     B: BitLit,
@@ -74,17 +74,17 @@ where
 ///
 /// This `Expr` implementation trimms away leading 0-bits, thus allowing for `Sub<_, 1>`
 /// implementations.
-impl<B> Expr for BitString<_0, B>
+impl<B> NumExpr for BitString<_0, B>
 where
-    B: Number,
+    B: NumberVal,
 {
     type Ret = B;
 }
 
-impl Expr for _0 {
+impl NumExpr for _0 {
     type Ret = _0;
 }
-impl Expr for _1 {
+impl NumExpr for _1 {
     type Ret = _1;
 }
 

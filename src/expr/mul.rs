@@ -1,60 +1,60 @@
 use crate::{
     op_types::{Add, Mul},
-    val_types::{BitLit, BitStrLit, BitString, Number, _0, _1},
-    Base, ExpRet, Expr,
+    val_types::{BitLit, BitStrLit, BitString, NumberVal, _0, _1},
+    Base, NumExpr, NumRet,
 };
 
-impl<L, R> Expr for Mul<L, R>
+impl<L, R> NumExpr for Mul<L, R>
 where
-    L: Expr,
-    R: Expr,
-    Mul<L::Ret, R::Ret, Base>: Expr,
+    L: NumExpr,
+    R: NumExpr,
+    Mul<L::Ret, R::Ret, Base>: NumExpr,
 {
-    type Ret = ExpRet<Mul<L::Ret, R::Ret, Base>>;
+    type Ret = NumRet<Mul<L::Ret, R::Ret, Base>>;
 }
 // -------------
 // Hard codod base cases.
 // Past attempts to coallesce these impls resulted in overlapping-impl headaches
 // -------------
 
-impl Expr for Mul<_0, _1, Base> {
+impl NumExpr for Mul<_0, _1, Base> {
     type Ret = _0;
 }
-impl Expr for Mul<_1, _0, Base> {
+impl NumExpr for Mul<_1, _0, Base> {
     type Ret = _0;
 }
-impl Expr for Mul<_0, _0, Base> {
+impl NumExpr for Mul<_0, _0, Base> {
     type Ret = _0;
 }
-impl Expr for Mul<_1, _1, Base> {
+impl NumExpr for Mul<_1, _1, Base> {
     type Ret = _1;
 }
-impl<Bs, B> Expr for Mul<_1, BitString<Bs, B>, Base>
+impl<Bs, B> NumExpr for Mul<_1, BitString<Bs, B>, Base>
 where
-    Bs: Expr,
+    Bs: NumExpr,
     B: BitLit,
-    BitString<Bs, B>: Number,
+    BitString<Bs, B>: NumberVal,
 {
     type Ret = BitString<Bs, B>;
 }
 
 // (LB, _1) * Val == ((LB * Val), _0) + Val
-impl<LB, Val> Expr for Mul<BitString<LB, _1>, Val, Base>
+impl<LB, Val> NumExpr for Mul<BitString<LB, _1>, Val, Base>
 where
     LB: BitStrLit,
-    Mul<LB, Val>: Expr,
-    Add<BitString<ExpRet<Mul<LB, Val>>, _0>, Val>: Expr,
+    Mul<LB, Val>: NumExpr,
+    Add<BitString<NumRet<Mul<LB, Val>>, _0>, Val>: NumExpr,
 {
-    type Ret = ExpRet<Add<BitString<ExpRet<Mul<LB, Val>>, _0>, Val>>;
+    type Ret = NumRet<Add<BitString<NumRet<Mul<LB, Val>>, _0>, Val>>;
 }
 // (LB, _0) * Val == ((LB * Val), _0)
-impl<LB, Val> Expr for Mul<BitString<LB, _0>, Val, Base>
+impl<LB, Val> NumExpr for Mul<BitString<LB, _0>, Val, Base>
 where
     LB: BitStrLit,
-    Mul<LB, Val>: Expr,
-    ExpRet<Mul<LB, Val>>: BitStrLit,
+    Mul<LB, Val>: NumExpr,
+    NumRet<Mul<LB, Val>>: BitStrLit,
 {
-    type Ret = BitString<ExpRet<Mul<LB, Val>>, _0>;
+    type Ret = BitString<NumRet<Mul<LB, Val>>, _0>;
 }
 
 #[cfg(test)]
