@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Expressions resolving to non-negative numbers
 - Expressions resolving to booleans
-- Comprison checks (==, <>[=])
+- Comprison checks (||, ==, <>[=])
 - Boolean AND
 - Positive integers
 - Subtraction evaluation 

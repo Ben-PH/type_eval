@@ -49,3 +49,8 @@ pub struct AND<L, R, M: ExprMode = Recurse> {
     _r: PhantomData<R>,
     _m: PhantomData<M>,
 }
+pub struct OR<L, R, M: ExprMode = Recurse> {
+    _l: PhantomData<L>,
+    _r: PhantomData<R>,
+    _m: PhantomData<M>,
+}
