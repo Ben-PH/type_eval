@@ -2,6 +2,7 @@
 
 /// Addition expressions
 mod add;
+mod cmp;
 mod mul;
 /// Subtraction expressions
 mod sub;

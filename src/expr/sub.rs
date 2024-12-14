@@ -1,28 +1,28 @@
 use crate::{
     op_types::Sub,
     val_types::{BitStrLit, BitString, _0, _1},
-    Base, ExpRet, Expr,
+    Base, NumExpr, NumRet,
 };
 
-impl<L, R> Expr for Sub<L, R>
+impl<L, R> NumExpr for Sub<L, R>
 where
-    L: Expr,
-    R: Expr,
-    Sub<L::Ret, R::Ret, Base>: Expr,
+    L: NumExpr,
+    R: NumExpr,
+    Sub<L::Ret, R::Ret, Base>: NumExpr,
 {
-    type Ret = <Sub<L::Ret, R::Ret, Base> as Expr>::Ret;
+    type Ret = <Sub<L::Ret, R::Ret, Base> as NumExpr>::Ret;
 }
 
 // ----
 //  Most basic of subtraction evaluations
 // ----
-impl Expr for Sub<_0, _0, Base> {
+impl NumExpr for Sub<_0, _0, Base> {
     type Ret = _0;
 }
-impl Expr for Sub<_1, _0, Base> {
+impl NumExpr for Sub<_1, _0, Base> {
     type Ret = _1;
 }
-impl Expr for Sub<_1, _1, Base> {
+impl NumExpr for Sub<_1, _1, Base> {
     type Ret = _0;
 }
 // Commented out as we are not yet handling negatives
@@ -33,7 +33,7 @@ impl Expr for Sub<_1, _1, Base> {
 // ---
 // Hard-codeable trimmed decrement
 // ---
-impl Expr for Sub<BitString<_1, _0>, _1, Base> {
+impl NumExpr for Sub<BitString<_1, _0>, _1, Base> {
     type Ret = _1;
 }
 
@@ -43,55 +43,55 @@ impl Expr for Sub<BitString<_1, _0>, _1, Base> {
 // }
 
 /// Non-trimming decrement
-impl<B> Expr for Sub<BitString<B, _1>, _1, Base>
+impl<B> NumExpr for Sub<BitString<B, _1>, _1, Base>
 where
-    B: Expr,
-    ExpRet<B>: BitStrLit,
+    B: NumExpr,
+    NumRet<B>: BitStrLit,
 {
     type Ret = BitString<B::Ret, _0>;
 }
 
 /// (L)0 - (R)0 = (L - R)0
-impl<LB, RB> Expr for Sub<BitString<LB, _0>, BitString<RB, _0>, Base>
+impl<LB, RB> NumExpr for Sub<BitString<LB, _0>, BitString<RB, _0>, Base>
 where
     // `L - R` is valid
-    Sub<LB, RB>: Expr,
+    Sub<LB, RB>: NumExpr,
     // `(L - R)0` is valid as a bitstring
-    BitString<ExpRet<Sub<LB, RB>>, _0>: Expr,
+    BitString<NumRet<Sub<LB, RB>>, _0>: NumExpr,
 {
-    type Ret = ExpRet<BitString<ExpRet<Sub<LB, RB>>, _0>>;
+    type Ret = NumRet<BitString<NumRet<Sub<LB, RB>>, _0>>;
 }
 /// (L)0 - (R)1 = ((L - R) - 1)1
-impl<LB, RB> Expr for Sub<BitString<LB, _0>, BitString<RB, _1>, Base>
+impl<LB, RB> NumExpr for Sub<BitString<LB, _0>, BitString<RB, _1>, Base>
 where
     // `L - R` is valid
-    Sub<LB, RB>: Expr,
+    Sub<LB, RB>: NumExpr,
     // `(L - R) - 1` is a valid expression
-    Sub<ExpRet<Sub<LB, RB>>, _1>: Expr,
+    Sub<NumRet<Sub<LB, RB>>, _1>: NumExpr,
     // `(L - R) - 1` Is a valid bit-string literal so can be appended with a bit to make a valid
     // number
-    ExpRet<Sub<ExpRet<Sub<LB, RB>>, _1>>: BitStrLit,
+    NumRet<Sub<NumRet<Sub<LB, RB>>, _1>>: BitStrLit,
 {
-    type Ret = BitString<ExpRet<Sub<ExpRet<Sub<LB, RB>>, _1>>, _1>;
+    type Ret = BitString<NumRet<Sub<NumRet<Sub<LB, RB>>, _1>>, _1>;
 }
 /// (L)1 - (R)0 = (L - R)1
-impl<LB, RB> Expr for Sub<BitString<LB, _1>, BitString<RB, _0>, Base>
+impl<LB, RB> NumExpr for Sub<BitString<LB, _1>, BitString<RB, _0>, Base>
 where
     // `L - R` is valid
-    Sub<LB, RB>: Expr,
+    Sub<LB, RB>: NumExpr,
     // `(L - R)1` is valid as a bitstring
-    BitString<ExpRet<Sub<LB, RB>>, _1>: Expr,
+    BitString<NumRet<Sub<LB, RB>>, _1>: NumExpr,
 {
-    type Ret = ExpRet<BitString<ExpRet<Sub<LB, RB>>, _1>>;
+    type Ret = NumRet<BitString<NumRet<Sub<LB, RB>>, _1>>;
 }
 
 /// (L)1 - (R)1 = (L - R)0
-impl<LB, RB> Expr for Sub<BitString<LB, _1>, BitString<RB, _1>, Base>
+impl<LB, RB> NumExpr for Sub<BitString<LB, _1>, BitString<RB, _1>, Base>
 where
     // same operation as (L)0 - (R)0
-    Sub<BitString<LB, _0>, BitString<RB, _0>>: Expr,
+    Sub<BitString<LB, _0>, BitString<RB, _0>>: NumExpr,
 {
-    type Ret = ExpRet<Sub<BitString<LB, _0>, BitString<RB, _0>>>;
+    type Ret = NumRet<Sub<BitString<LB, _0>, BitString<RB, _0>>>;
 }
 
 #[cfg(test)]
