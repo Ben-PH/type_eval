@@ -27,11 +27,13 @@ pub struct Mul<Lhs, Rhs, M = Recurse> {
 //     _m: PhantomData<M>,
 // }
 //
-// pub struct ShL<U, M: Mode = Ast> {
-//     _tp: PhantomData<U>,
-//     _mode: PhantomData<M>,
-// }
-// pub struct ShR<U, M: Mode = Ast> {
-//     _tp: PhantomData<U>,
-//     _mode: PhantomData<M>,
-// }
+pub struct ShL<Bs, N, M = Recurse> {
+    _bits: PhantomData<Bs>,
+    _shift_count: PhantomData<N>,
+    _mode: PhantomData<M>,
+}
+pub struct ShR<Bs, N, M = Recurse> {
+    _bits: PhantomData<Bs>,
+    _shift_count: PhantomData<N>,
+    _mode: PhantomData<M>,
+}

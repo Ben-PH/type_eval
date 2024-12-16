@@ -1,10 +1,9 @@
 //! Defines the manner in which expressions can recurse towards a base-case
 
-/// Addition expressions
 mod add;
 mod cmp;
 mod mul;
-/// Subtraction expressions
+mod shlr;
 mod sub;
 
 #[cfg(test)]
@@ -16,6 +15,7 @@ mod test {
     };
 
     #[test]
+    #[allow(non_upper_case_globals)]
     fn add_sub() {
         // const _2_ADD_1_SUB_3: () = _b3::<Add<BitString<_1, _0>, _1>>();
         const _2_ADD_1__SUB_3: () = _b0::<Sub<Add<BitString<_1, _0>, _1>, BitString<_1, _1>>>();
