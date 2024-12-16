@@ -43,3 +43,9 @@ pub struct MSB<Bs, M = Recurse> {
     _bits: PhantomData<Bs>,
     _mode: PhantomData<M>,
 }
+/// Gets the index of the most significant bit
+#[allow(clippy::upper_case_acronyms)]
+pub struct LSB<Bs, M = Recurse> {
+    _bits: PhantomData<Bs>,
+    _mode: PhantomData<M>,
+}
