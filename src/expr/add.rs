@@ -38,7 +38,10 @@ where
 {
     type Ret = BitString<B, _1>;
 }
-impl NumExpr for Add<_1, BitString<_1, _0>, Base> {
+impl<B> NumExpr for Add<_1, BitString<B, _0>, Base>
+where
+    B: BitStrLit,
+{
     type Ret = BitString<_1, _1>;
 }
 
@@ -116,5 +119,13 @@ mod test {
         const _3_ADD_3: () = _b6::<Add<BitString<_1, _1>, BitString<_1, _1>>>();
         const _6_ADD_1: () = _b7::<Add<BitString<BitString<_1, _1>, _0>, _1>>();
         const _7_ADD_1: () = _b8::<Add<BitString<BitString<_1, _1>, _1>, _1>>();
+
+        const _1_ADD_1__ADD_1: () = _b3::<Add<_1, Add<_1, _1>>>();
+        const _1_ADD__1_ADD_1: () = _b3::<Add<Add<_1, _1>, _1>>();
+
+        const _3_ADD_3__ADD_3: () =
+            _b9::<Add<BitString<_1, _1>, Add<BitString<_1, _1>, BitString<_1, _1>>>>();
+        const _3_ADD__3_ADD_3: () =
+            _b9::<Add<Add<BitString<_1, _1>, BitString<_1, _1>>, BitString<_1, _1>>>();
     }
 }
