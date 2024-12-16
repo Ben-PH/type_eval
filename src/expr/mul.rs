@@ -77,5 +77,10 @@ mod test {
         const _7_MUL_1: () = _b7::<Mul<BitString<BitString<_1, _1>, _1>, _1>>();
         const _8_MUL_1: () = _b8::<Mul<BitString<BitString<BitString<_1, _0>, _0>, _0>, _1>>();
         const _3_MUL_3: () = _b9::<Mul<BitString<_1, _1>, BitString<_1, _1>>>();
+
+        const _2_MUL_2__MUL_2: () =
+            _b8::<Mul<Mul<BitString<_1, _0>, BitString<_1, _0>>, BitString<_1, _0>>>();
+        const _2_MUL__2_MUL_2: () =
+            _b8::<Mul<BitString<_1, _0>, Mul<BitString<_1, _0>, BitString<_1, _0>>>>();
     }
 }
