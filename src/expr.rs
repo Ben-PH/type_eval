@@ -2,6 +2,7 @@
 
 mod add;
 mod cmp;
+mod msb;
 mod mul;
 mod shlr;
 mod sub;

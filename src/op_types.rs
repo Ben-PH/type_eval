@@ -37,3 +37,9 @@ pub struct ShR<Bs, N, M = Recurse> {
     _shift_count: PhantomData<N>,
     _mode: PhantomData<M>,
 }
+/// Gets the index of the most significant bit
+#[allow(clippy::upper_case_acronyms)]
+pub struct MSB<Bs, M = Recurse> {
+    _bits: PhantomData<Bs>,
+    _mode: PhantomData<M>,
+}
