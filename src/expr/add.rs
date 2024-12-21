@@ -42,7 +42,7 @@ impl<B> NumExpr for Add<U1, BitString<B, _0>, Base>
 where
     B: BitStrLit,
 {
-    type Ret = BitString<U1, _1>;
+    type Ret = BitString<B, _1>;
 }
 
 // ---
@@ -105,7 +105,7 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{test_res::*, U0, U1, U2, U3, U6, U7};
+    use crate::{test_res::*, U0, U1, U2, U3, U4, U6, U7};
     #[test]
     fn eval_add() {
         const _0_ADD_0: () = _b0::<Add<U0, U0>>();
@@ -115,6 +115,7 @@ mod test {
         const _1_ADD_2: () = _b3::<Add<U1, U2>>();
         const _3_ADD_1: () = _b4::<Add<U3, U1>>();
         const _1_ADD_3: () = _b4::<Add<U1, U3>>();
+        const _1_ADD_4: () = _b5::<Add<U1, U4>>();
         const _2_ADD_2: () = _b4::<Add<U2, U2>>();
         const _3_ADD_3: () = _b6::<Add<U3, U3>>();
         const _6_ADD_1: () = _b7::<Add<U6, U1>>();
