@@ -1,7 +1,7 @@
 use crate::{
     op_types::{ShL, ShR, Sub},
     val_types::{BitStrLit, BitString, NumberVal, _0, _1},
-    Base, NumExpr, NumRet,
+    Base, NumExpr, NumRet, U1,
 };
 
 impl<L, R> NumExpr for ShL<L, R>
@@ -50,7 +50,7 @@ where
 {
     type Ret = NumRet<ShR<Bs::Ret, NumRet<Sub<N, _1>>, Base>>;
 }
-impl<N> NumExpr for ShR<_1, N, Base>
+impl<N> NumExpr for ShR<U1, N, Base>
 where
     Sub<N, _1>: NumExpr,
 {
@@ -60,26 +60,25 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::test_res::*;
+    use crate::{test_res::*, U0, U1, U2, U3, U9};
     #[allow(non_upper_case_globals)]
     #[test]
     fn eval_msb() {
-        const _0_ShL_0: () = _b0::<ShL<_0, _0>>();
-        const _1_ShL_0: () = _b1::<ShL<_1, _0>>();
-        const _1_ShL_1: () = _b2::<ShL<_1, _1>>();
-        const _1_ShR_1: () = _b0::<ShR<_1, _1>>();
-        const _1_ShR_0: () = _b1::<ShR<_1, _0>>();
+        const _0_ShL_0: () = _b0::<ShL<_0, U0>>();
+        const _1_ShL_0: () = _b1::<ShL<_1, U0>>();
+        const _1_ShL_1: () = _b2::<ShL<_1, U1>>();
+        const _1_ShR_1: () = _b0::<ShR<_1, U1>>();
+        const _1_ShR_0: () = _b1::<ShR<_1, U0>>();
 
-        const _10_ShR_0: () = _b2::<ShR<BitString<_1, _0>, _0>>();
-        const _11_ShR_0: () = _b3::<ShR<BitString<_1, _1>, _0>>();
-        const _10_ShR_1: () = _b1::<ShR<BitString<_1, _0>, _1>>();
-        const _11_ShR_1: () = _b1::<ShR<BitString<_1, _1>, _1>>();
+        const _10_ShR_0: () = _b2::<ShR<BitString<_1, _0>, U0>>();
+        const _11_ShR_0: () = _b3::<ShR<BitString<_1, _1>, U0>>();
+        const _10_ShR_1: () = _b1::<ShR<BitString<_1, _0>, U1>>();
+        const _11_ShR_1: () = _b1::<ShR<BitString<_1, _1>, U1>>();
 
-        const _1_ShL_2: () = _b1::<ShL<_1, _0>>();
-        const _1_ShL_3: () = _b2::<ShL<_1, _1>>();
-        const _3_ShR_2: () = _b0::<ShR<BitString<_1, _1>, BitString<_1, _0>>>();
-        const _9_ShR_3: () =
-            _b1::<ShR<BitString<BitString<BitString<_1, _0>, _0>, _1>, BitString<_1, _1>>>();
+        const _1_ShL_2: () = _b1::<ShL<_1, U0>>();
+        const _1_ShL_3: () = _b2::<ShL<_1, U1>>();
+        const _3_ShR_2: () = _b0::<ShR<U3, U2>>();
+        const _9_ShR_3: () = _b1::<ShR<U9, U3>>();
         // const _MSB_10: () = _b1::<MSB<BitString<_1, _0>>>();
         // const _MSB_11: () = _b1::<MSB<BitString<_1, _1>>>();
         // const _MSB_100: () = _b1::<MSB<BitString<BitString<_1, _0>, _1>>>();

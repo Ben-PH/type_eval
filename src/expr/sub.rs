@@ -1,7 +1,7 @@
 use crate::{
     op_types::Sub,
     val_types::{BitStrLit, BitString, _0, _1},
-    Base, NumExpr, NumRet,
+    Base, NumExpr, NumRet, U1,
 };
 
 impl<L, R> NumExpr for Sub<L, R>
@@ -19,15 +19,15 @@ where
 impl NumExpr for Sub<_0, _0, Base> {
     type Ret = _0;
 }
-impl NumExpr for Sub<_1, _0, Base> {
-    type Ret = _1;
+impl NumExpr for Sub<U1, _0, Base> {
+    type Ret = U1;
 }
-impl NumExpr for Sub<_1, _1, Base> {
+impl NumExpr for Sub<U1, U1, Base> {
     type Ret = _0;
 }
 // Commented out as we are not yet handling negatives
-// impl Expr for Sub<_0, _1, Base> {
-//     type Ret = _1;
+// impl Expr for Sub<_0, U1, Base> {
+//     type Ret = U1;
 // }
 
 // ---
@@ -97,18 +97,19 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::test_res::*;
+    use crate::{test_res::*, U0, U1, U2, U3};
     #[test]
     fn eval_add() {
-        const _0_SUB_0: () = _b0::<Sub<_0, _0>>();
-        const _1_SUB_0: () = _b1::<Sub<_1, _0>>();
-        const _1_SUB_1: () = _b0::<Sub<_1, _1>>();
-        const _2_SUB_1: () = _b1::<Sub<BitString<_1, _0>, _1>>();
+        const _0_SUB_0: () = _b0::<Sub<U0, U0>>();
+        const _1_SUB_0: () = _b1::<Sub<U1, U0>>();
+        const _1_SUB_1: () = _b0::<Sub<U1, U1>>();
+        const _2_SUB_1: () = _b1::<Sub<U2, U1>>();
         // const _1_SUB_2: () = _b3::<Sub<_1, BitString<_1, _0>>>();
-        const _3_SUB_1: () = _b2::<Sub<BitString<_1, _1>, _1>>();
+        const _3_SUB_1: () = _b2::<Sub<U3, _1>>();
+        // const _4_SUB_1: () = _b3::<Sub<U4, _1>>();
         // const _1_SUB_3: () = _b4::<Sub<_1, BitString<_1, _1>>>();
-        const _2_SUB_2: () = _b0::<Sub<BitString<_1, _0>, BitString<_1, _0>>>();
-        const _3_SUB_2: () = _b1::<Sub<BitString<_1, _1>, BitString<_1, _0>>>();
-        const _3_SUB_3: () = _b0::<Sub<BitString<_1, _1>, BitString<_1, _1>>>();
+        const _2_SUB_2: () = _b0::<Sub<U2, U2>>();
+        const _3_SUB_2: () = _b1::<Sub<U3, U2>>();
+        const _3_SUB_3: () = _b0::<Sub<U3, U3>>();
     }
 }
