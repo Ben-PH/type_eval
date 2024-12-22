@@ -6,10 +6,9 @@ pub struct AddExp<Lhs, Rhs> {
     _l: PhantomData<Lhs>,
     _r: PhantomData<Rhs>,
 }
-pub struct SubExp<Lhs, Rhs, M = Recurse> {
+pub struct SubExp<Lhs, Rhs> {
     _l: PhantomData<Lhs>,
     _r: PhantomData<Rhs>,
-    _m: PhantomData<M>,
 }
 pub struct MulExp<Lhs, Rhs, M = Recurse> {
     _l: PhantomData<Lhs>,
