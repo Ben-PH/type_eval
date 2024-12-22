@@ -1,106 +1,148 @@
 use crate::{
     op_types::AddExp,
-    val_types::{BitStrLit, BitString, _0, _1},
-    Base, NumExpr, NumRet, U0, U1,
+    val_types::{BitStrLit, BitString, NumberVal, _0, _1},
+    NumExpr, U0, U1,
 };
+use core::ops::Add as StAdd;
+
+pub type AddOut<L, R> = <L as StAdd<R>>::Output;
 
 impl<L, R> NumExpr for AddExp<L, R>
 where
     L: NumExpr,
     R: NumExpr,
-    AddExp<L::Ret, R::Ret, Base>: NumExpr,
+    L::Ret: StAdd<R::Ret>,
+    AddOut<L::Ret, R::Ret>: NumberVal,
 {
-    type Ret = NumRet<AddExp<L::Ret, R::Ret, Base>>;
+    type Ret = AddOut<L::Ret, R::Ret>;
 }
 
 // ----
 //  Most basic of addition evaluations
 // ----
-impl NumExpr for AddExp<U0, U0, Base> {
-    type Ret = U0;
+impl StAdd<U0> for U0 {
+    type Output = U0;
+
+    fn add(self, _rhs: U0) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
-impl NumExpr for AddExp<U0, U1, Base> {
-    type Ret = U1;
+impl StAdd<U1> for U0 {
+    type Output = U1;
+    fn add(self, _rhs: U1) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
-impl NumExpr for AddExp<U1, U0, Base> {
-    type Ret = U1;
+impl StAdd<U0> for U1 {
+    type Output = U1;
+    fn add(self, _rhs: U0) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
-impl NumExpr for AddExp<U1, U1, Base> {
-    type Ret = BitString<U1, _0>;
+impl StAdd<U1> for U1 {
+    type Output = BitString<U1, _0>;
+    fn add(self, _rhs: U1) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
 
 // ---
 // Non-carry bit-additions to bit-string literal
 // ---
-impl<B> NumExpr for AddExp<BitString<B, _0>, U1, Base>
+impl<B> StAdd<U1> for BitString<B, _0>
 where
     B: BitStrLit,
 {
-    type Ret = BitString<B, _1>;
+    type Output = BitString<B, _1>;
+    fn add(self, _rhs: U1) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
-impl<B> NumExpr for AddExp<U1, BitString<B, _0>, Base>
+impl<B> StAdd<BitString<B, _0>> for U1
 where
     B: BitStrLit,
 {
-    type Ret = BitString<B, _1>;
+    type Output = BitString<B, _1>;
+    fn add(self, _rhs: BitString<B, _0>) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
 
 // ---
 // Carrying increment to a bit-string-literal
 // ---
-impl<B> NumExpr for AddExp<BitString<B, _1>, U1, Base>
+impl<B> StAdd<U1> for BitString<B, _1>
 where
     // Recurse the carry
-    AddExp<B, U1>: NumExpr,
+    B: StAdd<U1>,
     // Ensure the carry recursion is a valid progression
-    NumRet<AddExp<B, U1>>: BitStrLit,
+    AddOut<B, U1>: BitStrLit,
 {
-    type Ret = BitString<NumRet<AddExp<B, U1>>, _0>;
+    type Output = BitString<AddOut<B, U1>, _0>;
+    fn add(self, _rhs: U1) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
 
-impl<B> NumExpr for AddExp<U1, BitString<B, _1>, Base>
+impl<B> StAdd<BitString<B, _1>> for U1
 where
-    AddExp<B, U1>: NumExpr,
-    NumRet<AddExp<B, U1>>: BitStrLit,
+    B: StAdd<U1>,
+    AddOut<B, U1>: BitStrLit,
 {
-    type Ret = BitString<NumRet<AddExp<B, U1>>, _0>;
+    type Output = BitString<AddOut<B, U1>, _0>;
+    fn add(self, _rhs: BitString<B, _1>) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
 
 // ---
 // Addition of two bit-string literals
 // ---
 /// (LB, 0) + (RB, 0) == ((LB + RB), 0)
-impl<LB, RB> NumExpr for AddExp<BitString<LB, _0>, BitString<RB, _0>, Base>
+impl<LB, RB> StAdd<BitString<RB, _0>> for BitString<LB, _0>
 where
-    AddExp<LB, RB>: NumExpr,
-    NumRet<AddExp<LB, RB>>: BitStrLit,
+    LB: StAdd<RB>,
+    AddOut<LB, RB>: BitStrLit,
 {
-    type Ret = BitString<NumRet<AddExp<LB, RB>>, _0>;
+    type Output = BitString<AddOut<LB, RB>, _0>;
+    fn add(self, _rhs: BitString<RB, _0>) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
 /// (LB, 0) + (RB, 1) == ((LB + RB), 1)
-impl<LB, RB> NumExpr for AddExp<BitString<LB, _0>, BitString<RB, _1>, Base>
+impl<LB, RB> StAdd<BitString<RB, _1>> for BitString<LB, _0>
 where
-    AddExp<LB, RB>: NumExpr,
-    NumRet<AddExp<LB, RB>>: BitStrLit,
+    LB: StAdd<RB>,
+    AddOut<LB, RB>: BitStrLit,
 {
-    type Ret = BitString<NumRet<AddExp<LB, RB>>, _1>;
+    type Output = BitString<AddOut<LB, RB>, _1>;
+    fn add(self, _rhs: BitString<RB, _1>) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
-impl<LB, RB> NumExpr for AddExp<BitString<LB, _1>, BitString<RB, _0>, Base>
+impl<LB, RB> StAdd<BitString<RB, _0>> for BitString<LB, _1>
 where
-    AddExp<LB, RB>: NumExpr,
-    NumRet<AddExp<LB, RB>>: BitStrLit,
+    LB: StAdd<RB>,
+    AddOut<LB, RB>: BitStrLit,
 {
-    type Ret = BitString<NumRet<AddExp<LB, RB>>, _1>;
+    type Output = BitString<AddOut<LB, RB>, _1>;
+    fn add(self, _rhs: BitString<RB, _0>) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
 /// (LB, 1) + (RB, 1) == ((LB + RB) + 1, 1)
-impl<LB, RB> NumExpr for AddExp<BitString<LB, _1>, BitString<RB, _1>, Base>
+impl<LB, RB> StAdd<BitString<RB, _1>> for BitString<LB, _1>
 where
-    AddExp<LB, RB>: NumExpr,
-    NumRet<AddExp<LB, RB>>: NumExpr,
-    AddExp<NumRet<NumRet<AddExp<LB, RB>>>, U1>: NumExpr,
-    NumRet<AddExp<NumRet<NumRet<AddExp<LB, RB>>>, U1>>: BitStrLit,
+    LB: StAdd<RB>,
+    AddOut<LB, RB>: BitStrLit + StAdd<U1>,
+    AddOut<AddOut<LB, RB>, U1>: BitStrLit,
+    // AddExp<NumRet<NumRet<AddExp<LB, RB>>>, U1>: NumExpr,
+    // NumRet<AddExp<NumRet<NumRet<AddExp<LB, RB>>>, U1>>: BitStrLit,
 {
-    type Ret = BitString<NumRet<AddExp<NumRet<NumRet<AddExp<LB, RB>>>, U1>>, _0>;
+    type Output = BitString<AddOut<AddOut<LB, RB>, U1>, _0>;
+    fn add(self, _rhs: BitString<RB, _1>) -> Self::Output {
+        unimplemented!("type eval only")
+    }
 }
 #[cfg(test)]
 mod test {
@@ -114,6 +156,7 @@ mod test {
         const _2_ADD_1: () = _b3::<AddExp<U2, U1>>();
         const _1_ADD_2: () = _b3::<AddExp<U1, U2>>();
         const _3_ADD_1: () = _b4::<AddExp<U3, U1>>();
+        const _4_ADD_1: () = _b5::<AddExp<U4, U1>>();
         const _1_ADD_3: () = _b4::<AddExp<U1, U3>>();
         const _1_ADD_4: () = _b5::<AddExp<U1, U4>>();
         const _2_ADD_2: () = _b4::<AddExp<U2, U2>>();
