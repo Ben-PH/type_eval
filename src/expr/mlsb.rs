@@ -1,7 +1,7 @@
 use core::marker::PhantomData;
 
 use crate::{
-    op_types::{Add, LSB, MSB},
+    op_types::{AddExp, LSB, MSB},
     val_types::{BitLit, BitStrLit, BitString, NumberVal, _0, _1},
     NumExpr, NumRet, U0, U1,
 };
@@ -38,10 +38,10 @@ where
     Idx: NumberVal,
     BS: NumberVal + BitStrLit,
     B: BitLit,
-    Add<Idx, U1>: NumExpr,
-    MSBCount<NumRet<Add<Idx, U1>>, BS>: NumExpr,
+    AddExp<Idx, U1>: NumExpr,
+    MSBCount<NumRet<AddExp<Idx, U1>>, BS>: NumExpr,
 {
-    type Ret = NumRet<MSBCount<NumRet<Add<Idx, U1>>, BS>>;
+    type Ret = NumRet<MSBCount<NumRet<AddExp<Idx, U1>>, BS>>;
 }
 
 impl<BS> NumExpr for LSB<BS>
@@ -75,10 +75,10 @@ impl<Idx, BS> NumExpr for LSBCount<Idx, BitString<BS, _0>>
 where
     Idx: NumberVal,
     BS: NumberVal + BitStrLit,
-    Add<Idx, U1>: NumExpr,
-    LSBCount<NumRet<Add<Idx, U1>>, BS>: NumExpr,
+    AddExp<Idx, U1>: NumExpr,
+    LSBCount<NumRet<AddExp<Idx, U1>>, BS>: NumExpr,
 {
-    type Ret = NumRet<LSBCount<NumRet<Add<Idx, U1>>, BS>>;
+    type Ret = NumRet<LSBCount<NumRet<AddExp<Idx, U1>>, BS>>;
 }
 impl<Idx, BS> NumExpr for LSBCount<Idx, BitString<BS, _1>>
 where
