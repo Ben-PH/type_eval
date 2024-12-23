@@ -1,17 +1,17 @@
 use core::marker::PhantomData;
 
 use crate::{
-    op_types::{Add, LSB, MSB},
+    op_types::{AddExp, LSB, MSB},
     val_types::{BitLit, BitStrLit, BitString, NumberVal, _0, _1},
-    NumExpr, NumRet,
+    NumExpr, NumRet, U0, U1,
 };
 
 impl<BS> NumExpr for MSB<BS>
 where
     BS: NumExpr,
-    MSBCount<_0, BS::Ret>: NumExpr,
+    MSBCount<U0, BS::Ret>: NumExpr,
 {
-    type Ret = NumRet<MSBCount<_0, BS::Ret>>;
+    type Ret = NumRet<MSBCount<U0, BS::Ret>>;
 }
 
 #[allow(clippy::upper_case_acronyms)]
@@ -21,13 +21,13 @@ pub struct MSBCount<Idx: NumberVal, Bs: NumberVal> {
     // _mode: PhantomData<M>,
 }
 
-impl<Idx> NumExpr for MSBCount<Idx, _0>
+impl<Idx> NumExpr for MSBCount<Idx, U0>
 where
     Idx: NumberVal,
 {
     type Ret = Idx;
 }
-impl<Idx> NumExpr for MSBCount<Idx, _1>
+impl<Idx> NumExpr for MSBCount<Idx, U1>
 where
     Idx: NumberVal,
 {
@@ -38,18 +38,18 @@ where
     Idx: NumberVal,
     BS: NumberVal + BitStrLit,
     B: BitLit,
-    Add<Idx, _1>: NumExpr,
-    MSBCount<NumRet<Add<Idx, _1>>, BS>: NumExpr,
+    AddExp<Idx, U1>: NumExpr,
+    MSBCount<NumRet<AddExp<Idx, U1>>, BS>: NumExpr,
 {
-    type Ret = NumRet<MSBCount<NumRet<Add<Idx, _1>>, BS>>;
+    type Ret = NumRet<MSBCount<NumRet<AddExp<Idx, U1>>, BS>>;
 }
 
 impl<BS> NumExpr for LSB<BS>
 where
     BS: NumExpr,
-    LSBCount<_0, BS::Ret>: NumExpr,
+    LSBCount<U0, BS::Ret>: NumExpr,
 {
-    type Ret = NumRet<LSBCount<_0, BS::Ret>>;
+    type Ret = NumRet<LSBCount<U0, BS::Ret>>;
 }
 
 #[allow(clippy::upper_case_acronyms)]
@@ -59,13 +59,13 @@ pub struct LSBCount<Idx: NumberVal, Bs: NumberVal> {
     // _mode: PhantomData<M>,
 }
 
-impl<Idx> NumExpr for LSBCount<Idx, _0>
+impl<Idx> NumExpr for LSBCount<Idx, U0>
 where
     Idx: NumberVal,
 {
     type Ret = Idx;
 }
-impl<Idx> NumExpr for LSBCount<Idx, _1>
+impl<Idx> NumExpr for LSBCount<Idx, U1>
 where
     Idx: NumberVal,
 {
@@ -75,10 +75,10 @@ impl<Idx, BS> NumExpr for LSBCount<Idx, BitString<BS, _0>>
 where
     Idx: NumberVal,
     BS: NumberVal + BitStrLit,
-    Add<Idx, _1>: NumExpr,
-    LSBCount<NumRet<Add<Idx, _1>>, BS>: NumExpr,
+    AddExp<Idx, U1>: NumExpr,
+    LSBCount<NumRet<AddExp<Idx, U1>>, BS>: NumExpr,
 {
-    type Ret = NumRet<LSBCount<NumRet<Add<Idx, _1>>, BS>>;
+    type Ret = NumRet<LSBCount<NumRet<AddExp<Idx, U1>>, BS>>;
 }
 impl<Idx, BS> NumExpr for LSBCount<Idx, BitString<BS, _1>>
 where

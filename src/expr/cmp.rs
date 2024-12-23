@@ -7,8 +7,8 @@ mod ltegte;
 #[cfg(test)]
 mod test {
     use crate::ctrl_types::{False, True, AND, GT, LT, OR};
-    use crate::test_res::*;
-    use crate::val_types::{BitString, _0, _1};
+    use crate::val_types::{_0, _1};
+    use crate::{test_res::*, U2, U3};
     #[test]
     fn eval_and() {
         const _T_AND_T: () = _t::<AND<True, True>>();
@@ -39,14 +39,14 @@ mod test {
         const _1_GT_0: () = _t::<GT<_1, _0>>();
         const _1_GT_1: () = _f::<GT<_1, _1>>();
 
-        const _2_GT_1: () = _t::<GT<BitString<_1, _0>, _1>>();
-        const _2_LT_1: () = _f::<LT<BitString<_1, _0>, _1>>();
-        const _1_GT_2: () = _f::<GT<_1, BitString<_1, _0>>>();
-        const _1_LT_2: () = _t::<LT<_1, BitString<_1, _0>>>();
+        const _2_GT_1: () = _t::<GT<U2, _1>>();
+        const _2_LT_1: () = _f::<LT<U2, _1>>();
+        const _1_GT_2: () = _f::<GT<_1, U2>>();
+        const _1_LT_2: () = _t::<LT<_1, U2>>();
 
-        const _3_GT_2: () = _t::<GT<BitString<_1, _1>, BitString<_1, _0>>>();
-        const _3_LT_2: () = _f::<LT<BitString<_1, _1>, BitString<_1, _0>>>();
-        const _2_GT_3: () = _f::<GT<BitString<_1, _0>, BitString<_1, _1>>>();
-        const _2_LT_3: () = _t::<LT<BitString<_1, _0>, BitString<_1, _1>>>();
+        const _3_GT_2: () = _t::<GT<U3, U2>>();
+        const _3_LT_2: () = _f::<LT<U3, U2>>();
+        const _2_GT_3: () = _f::<GT<U2, U3>>();
+        const _2_LT_3: () = _t::<LT<U2, U3>>();
     }
 }

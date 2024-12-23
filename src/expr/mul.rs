@@ -1,35 +1,35 @@
 use crate::{
-    op_types::{Add, Mul},
+    op_types::{AddExp, MulExp},
     val_types::{BitLit, BitStrLit, BitString, NumberVal, _0, _1},
-    Base, NumExpr, NumRet,
+    Base, NumExpr, NumRet, U0, U1,
 };
 
-impl<L, R> NumExpr for Mul<L, R>
+impl<L, R> NumExpr for MulExp<L, R>
 where
     L: NumExpr,
     R: NumExpr,
-    Mul<L::Ret, R::Ret, Base>: NumExpr,
+    MulExp<L::Ret, R::Ret, Base>: NumExpr,
 {
-    type Ret = NumRet<Mul<L::Ret, R::Ret, Base>>;
+    type Ret = NumRet<MulExp<L::Ret, R::Ret, Base>>;
 }
 // -------------
 // Hard codod base cases.
 // Past attempts to coallesce these impls resulted in overlapping-impl headaches
 // -------------
 
-impl NumExpr for Mul<_0, _1, Base> {
-    type Ret = _0;
+impl NumExpr for MulExp<U0, U1, Base> {
+    type Ret = U0;
 }
-impl NumExpr for Mul<_1, _0, Base> {
-    type Ret = _0;
+impl NumExpr for MulExp<U1, U0, Base> {
+    type Ret = U0;
 }
-impl NumExpr for Mul<_0, _0, Base> {
-    type Ret = _0;
+impl NumExpr for MulExp<U0, U0, Base> {
+    type Ret = U0;
 }
-impl NumExpr for Mul<_1, _1, Base> {
-    type Ret = _1;
+impl NumExpr for MulExp<U1, U1, Base> {
+    type Ret = U1;
 }
-impl<Bs, B> NumExpr for Mul<_1, BitString<Bs, B>, Base>
+impl<Bs, B> NumExpr for MulExp<U1, BitString<Bs, B>, Base>
 where
     Bs: NumExpr,
     B: BitLit,
@@ -38,49 +38,47 @@ where
     type Ret = BitString<Bs, B>;
 }
 
-// (LB, _1) * Val == ((LB * Val), _0) + Val
-impl<LB, Val> NumExpr for Mul<BitString<LB, _1>, Val, Base>
+// (LB, U1) * Val == ((LB * Val), U0) + Val
+impl<LB, Val> NumExpr for MulExp<BitString<LB, _1>, Val, Base>
 where
     LB: BitStrLit,
-    Mul<LB, Val>: NumExpr,
-    Add<BitString<NumRet<Mul<LB, Val>>, _0>, Val>: NumExpr,
+    MulExp<LB, Val>: NumExpr,
+    AddExp<BitString<NumRet<MulExp<LB, Val>>, _0>, Val>: NumExpr,
 {
-    type Ret = NumRet<Add<BitString<NumRet<Mul<LB, Val>>, _0>, Val>>;
+    type Ret = NumRet<AddExp<BitString<NumRet<MulExp<LB, Val>>, _0>, Val>>;
 }
-// (LB, _0) * Val == ((LB * Val), _0)
-impl<LB, Val> NumExpr for Mul<BitString<LB, _0>, Val, Base>
+// (LB, U0) * Val == ((LB * Val), U0)
+impl<LB, Val> NumExpr for MulExp<BitString<LB, _0>, Val, Base>
 where
     LB: BitStrLit,
-    Mul<LB, Val>: NumExpr,
-    NumRet<Mul<LB, Val>>: BitStrLit,
+    MulExp<LB, Val>: NumExpr,
+    NumRet<MulExp<LB, Val>>: BitStrLit,
 {
-    type Ret = BitString<NumRet<Mul<LB, Val>>, _0>;
+    type Ret = BitString<NumRet<MulExp<LB, Val>>, _0>;
 }
 
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::test_res::*;
+    use crate::{test_res::*, U1, U2, U3, U4, U5, U6, U7, U8};
     #[test]
     fn eval_add() {
-        const _0_MUL_0: () = _b0::<Mul<_0, _0>>();
-        const _0_MUL_1: () = _b0::<Mul<_0, _1>>();
-        const _1_MUL_0: () = _b0::<Mul<_1, _0>>();
-        const _2_MUL_1: () = _b2::<Mul<BitString<_1, _0>, _1>>();
-        const _1_MUL_2: () = _b2::<Mul<_1, BitString<_1, _0>>>();
-        const _3_MUL_1: () = _b3::<Mul<BitString<_1, _1>, _1>>();
-        const _1_MUL_3: () = _b3::<Mul<_1, BitString<_1, _1>>>();
-        const _2_MUL_2: () = _b4::<Mul<BitString<_1, _0>, BitString<_1, _0>>>();
-        const _4_MUL_1: () = _b4::<Mul<BitString<BitString<_1, _0>, _0>, _1>>();
-        const _5_MUL_1: () = _b5::<Mul<BitString<BitString<_1, _0>, _1>, _1>>();
-        const _6_MUL_1: () = _b6::<Mul<BitString<BitString<_1, _1>, _0>, _1>>();
-        const _7_MUL_1: () = _b7::<Mul<BitString<BitString<_1, _1>, _1>, _1>>();
-        const _8_MUL_1: () = _b8::<Mul<BitString<BitString<BitString<_1, _0>, _0>, _0>, _1>>();
-        const _3_MUL_3: () = _b9::<Mul<BitString<_1, _1>, BitString<_1, _1>>>();
+        const _0_MUL_0: () = _b0::<MulExp<U0, U0>>();
+        const _0_MUL_1: () = _b0::<MulExp<U0, U1>>();
+        const _1_MUL_0: () = _b0::<MulExp<U1, U0>>();
+        const _2_MUL_1: () = _b2::<MulExp<U2, U1>>();
+        const _1_MUL_2: () = _b2::<MulExp<U1, U2>>();
+        const _3_MUL_1: () = _b3::<MulExp<U3, U1>>();
+        const _1_MUL_3: () = _b3::<MulExp<U1, U3>>();
+        const _2_MUL_2: () = _b4::<MulExp<U2, U2>>();
+        const _4_MUL_1: () = _b4::<MulExp<U4, U1>>();
+        const _5_MUL_1: () = _b5::<MulExp<U5, U1>>();
+        const _6_MUL_1: () = _b6::<MulExp<U6, U1>>();
+        const _7_MUL_1: () = _b7::<MulExp<U7, U1>>();
+        const _8_MUL_1: () = _b8::<MulExp<U8, U1>>();
+        const _3_MUL_3: () = _b9::<MulExp<U3, U3>>();
 
-        const _2_MUL_2__MUL_2: () =
-            _b8::<Mul<Mul<BitString<_1, _0>, BitString<_1, _0>>, BitString<_1, _0>>>();
-        const _2_MUL__2_MUL_2: () =
-            _b8::<Mul<BitString<_1, _0>, Mul<BitString<_1, _0>, BitString<_1, _0>>>>();
+        const _2_MUL_2__MUL_2: () = _b8::<MulExp<MulExp<U2, U2>, U2>>();
+        const _2_MUL__2_MUL_2: () = _b8::<MulExp<U2, MulExp<U2, U2>>>();
     }
 }
