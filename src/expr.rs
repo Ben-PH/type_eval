@@ -10,9 +10,9 @@ mod sub;
 #[cfg(test)]
 mod test {
     use crate::{
+        num_vals::{U0, U1, U2, U3, U4, U6},
         op_types::{AddExp, ShLExp, SubExp, MSB},
         test_res::*,
-        U0, U1, U2, U3, U4, U6,
     };
 
     #[test]

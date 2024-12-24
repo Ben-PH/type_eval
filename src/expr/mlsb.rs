@@ -1,9 +1,10 @@
 use core::marker::PhantomData;
 
 use crate::{
+    num_vals::{U0, U1},
     op_types::{AddExp, LSB, MSB},
-    val_types::{BitLit, BitStrLit, BitString, NumberVal, _0, _1},
-    NumExpr, NumRet, U0, U1,
+    val_types::{BitLit, BitStrLit, NumberVal, _0, _1},
+    BitString, NumExpr, NumRet,
 };
 
 impl<BS> NumExpr for MSB<BS>

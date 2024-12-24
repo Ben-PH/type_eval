@@ -1,7 +1,8 @@
 use crate::{
+    num_vals::{U0, U1},
     op_types::{AddExp, MulExp},
-    val_types::{BitLit, BitStrLit, BitString, NumberVal, _0, _1},
-    Base, NumExpr, NumRet, U0, U1,
+    val_types::{BitLit, BitStrLit, NumberVal, _0, _1},
+    Base, BitString, NumExpr, NumRet,
 };
 
 impl<L, R> NumExpr for MulExp<L, R>
@@ -60,7 +61,10 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{test_res::*, U1, U2, U3, U4, U5, U6, U7, U8};
+    use crate::{
+        num_vals::{U1, U2, U3, U4, U5, U6, U7, U8},
+        test_res::*,
+    };
     #[test]
     fn eval_add() {
         const _0_MUL_0: () = _b0::<MulExp<U0, U0>>();

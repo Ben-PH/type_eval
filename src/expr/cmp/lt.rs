@@ -1,7 +1,7 @@
 use crate::{
     ctrl_types::{False, True, LT},
-    val_types::{BitLit, BitStrLit, BitString, _0, _1},
-    Base, BoolExpr, BoolRet, NumExpr,
+    val_types::{BitLit, BitStrLit, _0, _1},
+    Base, BitString, BoolExpr, BoolRet, NumExpr,
 };
 
 impl<L, R> BoolExpr for LT<L, R>

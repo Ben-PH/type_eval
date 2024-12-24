@@ -1,10 +1,50 @@
+//! ```rust
+//! use type_eval::{op_types::AddExp, NumberVal, BoolExpr, ctrl_types::{True, LTE, GTE}, num_vals::U1};
+//! // A keyboard matrix trait.
+//! trait KBMatrix
+//! // TODO: impl non-zero
+//! // where
+//! //     GTE<Self::Width, U1>: BoolExpr<Ret = True>,
+//! //     GTE<Self::Height, U1>: BoolExpr<Ret = True>,
+//! {
+//!     type Width: NumberVal;
+//!     type Height: NumberVal;
+//! }
+
+//! // a convenience definition to get a parent-matrix width and height
+//! type ParentWidth<S: SubMatrix> = <S::Parent as KBMatrix>::Width;
+//! type ParentHeight<S: SubMatrix> = <S::Parent as KBMatrix>::Height;
+
+//! // You can define a sub matrix such that the compiler will cause an error
+//! // if it's not contained within the parent matrix
+//! trait SubMatrix
+//! where
+//!     GTE<Self::Width, U1>: BoolExpr<Ret = True>,
+//!     GTE<Self::Height, U1>: BoolExpr<Ret = True>,
+//!     // this is effectively `assert!(x + width <= parent.width)`, but in the type system
+//!     LTE<AddExp<Self::Width, Self::XLoc>, ParentWidth<Self>>: BoolExpr<Ret = True>,
+//!     // this is effectively `assert!(y + height <= parent.height)`, but in the type system
+//!     LTE<AddExp<Self::Height, Self::YLoc>, ParentHeight<Self>>: BoolExpr<Ret = True>,
+//! {
+//!     type Parent: KBMatrix;
+//!     type Width: NumberVal;
+//!     type XLoc: NumberVal;
+//!     type Height: NumberVal;
+//!     type YLoc: NumberVal;
+//! }
+//! ```
 #![no_std]
-mod ctrl_types;
-mod op_types;
-mod val_types;
+pub mod ctrl_types;
+pub mod op_types;
+pub mod val_types;
 use ctrl_types::BoolVal;
-use val_types::{BitString, NumberVal, _0, _1};
+pub use val_types::B;
+pub(crate) use val_types::B as BitString;
+pub use val_types::{NumberVal, _0, _1};
 mod expr;
+pub mod num_vals {
+    include!(concat!(env!("OUT_DIR"), "/consts.rs"));
+}
 
 pub trait ExprMode {}
 pub struct Recurse;
@@ -22,38 +62,17 @@ pub trait BoolExpr {
 }
 type BoolRet<T> = <T as BoolExpr>::Ret;
 
-// Some initial type aliases before refining the generator
-pub type U0 = _0;
-pub type U1 = _1;
-pub type U2 = BitString<_1, _0>;
-pub type U3 = BitString<_1, _1>;
-pub type U4 = BitString<U2, _0>;
-pub type U5 = BitString<U2, _1>;
-pub type U6 = BitString<U3, _0>;
-pub type U7 = BitString<U3, _1>;
-pub type U8 = BitString<U4, _0>;
-pub type U9 = BitString<U4, _1>;
-pub type U10 = BitString<U5, _0>;
-pub type U11 = BitString<U5, _1>;
-pub type U12 = BitString<U6, _0>;
-pub type U13 = BitString<U6, _1>;
-pub type U14 = BitString<U7, _0>;
-pub type U15 = BitString<U7, _1>;
-pub type U16 = BitString<U8, _0>;
-pub type U17 = BitString<U8, _1>;
-pub type U18 = BitString<U9, _0>;
-pub type U19 = BitString<U9, _1>;
-
 #[cfg(test)]
 mod test_res {
     use ctrl_types::{False, True};
-    use val_types::{BitString, _0};
+    use val_types::_0;
 
+    use crate::num_vals::*;
     use crate::val_types::_1;
 
     use super::*;
-    pub(crate) const fn _b0<E: NumExpr<Ret = _0>>() {}
-    pub(crate) const fn _b1<E: NumExpr<Ret = _1>>() {}
+    pub(crate) const fn _b0<E: NumExpr<Ret = U0>>() {}
+    pub(crate) const fn _b1<E: NumExpr<Ret = U1>>() {}
     pub(crate) const fn _b2<E: NumExpr<Ret = U2>>() {}
     pub(crate) const fn _b3<E: NumExpr<Ret = U3>>() {}
     pub(crate) const fn _b4<E: NumExpr<Ret = U4>>() {}

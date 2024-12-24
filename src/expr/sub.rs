@@ -1,7 +1,8 @@
 use crate::{
+    num_vals::{U0, U1},
     op_types::SubExp,
-    val_types::{BitString, NumberVal, _0, _1},
-    NumExpr, NumRet, U0, U1,
+    val_types::{NumberVal, _0, _1},
+    BitString, NumExpr, NumRet,
 };
 use core::ops::Sub as StSub;
 
@@ -139,7 +140,10 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{test_res::*, U0, U1, U2, U3};
+    use crate::{
+        num_vals::{U0, U1, U2, U3},
+        test_res::*,
+    };
     #[test]
     fn eval_add() {
         const _0_SUB_0: () = _b0::<SubExp<U0, U0>>();

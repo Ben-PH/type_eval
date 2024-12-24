@@ -1,5 +1,6 @@
 use core::marker::PhantomData;
 
+use self::B as BitString;
 use crate::{ExprMode, NumExpr, Recurse};
 
 pub trait NumberVal {}
@@ -9,7 +10,7 @@ pub struct _0;
 /// Literal representation of the 1-bit
 pub struct _1;
 /// Literal representation of a bit-string
-pub struct BitString<Bs, B, M: ExprMode = Recurse> {
+pub struct B<Bs, B, M: ExprMode = Recurse> {
     _bits: PhantomData<Bs>,
     _last_bit: PhantomData<B>,
     _m: PhantomData<M>,

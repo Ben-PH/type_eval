@@ -1,7 +1,8 @@
 use crate::{
+    num_vals::{U0, U1},
     op_types::AddExp,
-    val_types::{BitStrLit, BitString, NumberVal, _0, _1},
-    NumExpr, U0, U1,
+    val_types::{BitStrLit, NumberVal, _0, _1},
+    BitString, NumExpr,
 };
 use core::ops::Add as StAdd;
 
@@ -147,7 +148,10 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{test_res::*, U0, U1, U2, U3, U4, U6, U7};
+    use crate::{
+        num_vals::{U0, U1, U2, U3, U4, U6, U7},
+        test_res::*,
+    };
     #[test]
     fn eval_add() {
         const _0_ADD_0: () = _b0::<AddExp<U0, U0>>();

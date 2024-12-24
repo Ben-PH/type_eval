@@ -15,16 +15,6 @@ pub struct MulExp<Lhs, Rhs, M = Recurse> {
     _r: PhantomData<Rhs>,
     _m: PhantomData<M>,
 }
-// pub struct BitAnd<L, R, M: Mode = Ast> {
-//     _l: PhantomData<L>,
-//     _r: PhantomData<R>,
-//     _m: PhantomData<M>,
-// }
-// pub struct BitNot<B, M: Mode = Ast> {
-//     _b: PhantomData<B>,
-//     _m: PhantomData<M>,
-// }
-//
 pub struct ShLExp<Bs, N, M = Recurse> {
     _bits: PhantomData<Bs>,
     _shift_count: PhantomData<N>,

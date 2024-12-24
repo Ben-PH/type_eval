@@ -8,7 +8,10 @@ mod ltegte;
 mod test {
     use crate::ctrl_types::{False, True, AND, GT, LT, OR};
     use crate::val_types::{_0, _1};
-    use crate::{test_res::*, U2, U3};
+    use crate::{
+        num_vals::{U2, U3},
+        test_res::*,
+    };
     #[test]
     fn eval_and() {
         const _T_AND_T: () = _t::<AND<True, True>>();

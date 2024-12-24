@@ -1,7 +1,8 @@
 use crate::{
+    num_vals::U1,
     op_types::{ShLExp, ShRExp, SubExp},
-    val_types::{BitStrLit, BitString, NumberVal, _0, _1},
-    Base, NumExpr, NumRet, U1,
+    val_types::{BitStrLit, NumberVal, _0, _1},
+    Base, BitString, NumExpr, NumRet,
 };
 
 impl<L, R> NumExpr for ShLExp<L, R>
@@ -60,7 +61,10 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{test_res::*, U0, U1, U2, U3, U9};
+    use crate::{
+        num_vals::{U0, U1, U2, U3, U9},
+        test_res::*,
+    };
     #[allow(non_upper_case_globals)]
     #[test]
     fn eval_msb() {

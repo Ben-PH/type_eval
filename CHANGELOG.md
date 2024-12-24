@@ -34,13 +34,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Expressions resolving to non-negative numbers
+  - +, -, *, <<, >>,  
 - Expressions resolving to booleans
-- Comprison checks (||, ==, <>[=])
-- Boolean AND
-- Positive integers
-- Subtraction evaluation 
-- Addition evaluaton
-- Multiplication evaluaton
+  - Comprison checks (&&, ||, ==, <>[=])
 - `CHANGELOG.md`
 
 ### Marked for Deprecation
