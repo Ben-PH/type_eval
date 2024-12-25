@@ -1,7 +1,10 @@
 use core::marker::PhantomData;
 
 use self::B as BitString;
-use crate::{ExprMode, NumExpr, Recurse};
+use crate::{
+    NumExpr,
+    _inners::{_BitLit, _BitStrLit, _ExprMode, _Recurse},
+};
 
 pub trait NumberVal {}
 
@@ -10,71 +13,25 @@ pub struct _0;
 /// Literal representation of the 1-bit
 pub struct _1;
 /// Literal representation of a bit-string
-pub struct B<Bs, B, M: ExprMode = Recurse> {
+pub struct B<Bs, B, M: _ExprMode = _Recurse> {
     _bits: PhantomData<Bs>,
     _last_bit: PhantomData<B>,
     _m: PhantomData<M>,
 }
 
-/// Allows a 0-bit literal to represent a concrete number
+/// A [`NumExpr`] can output type-expressed `0`
 impl NumberVal for _0 {}
-/// Allows a 1-bit literal to represent a concrete number
+/// A [`NumExpr`] can output type-expressed `1`
 impl NumberVal for _1 {}
-/// For a BitString to be considered as a valid concrete number, it must be prepended with
-/// something that implements BitStrLit, and appended by a BitLit
+/// A [`NumExpr`] can output type-expressed `0bxxxx`
 impl<Bs, B> NumberVal for BitString<Bs, B>
 where
-    Bs: BitStrLit,
-    B: BitLit,
+    Bs: _BitStrLit,
+    B: _BitLit,
 {
 }
 
-/// Defines the things that can be appended to a BitStrLit to make a concrete Number representation
-/// form a BitString
-pub trait BitLit {}
-impl BitLit for _0 {}
-impl BitLit for _1 {}
-
-/// When paired with a `BitLit` terminator in a `BitString`, forms a concrete representation of an
-/// integer.
-pub trait BitStrLit {}
-
-/// A conceptual "Base Case" for the leading bits to represent a Number of more than one bit.
-impl BitStrLit for _1 {}
-
-/// Any BitString is a valid BitStrLit if the leading bits form a valid BitStrLit, and the
-/// terminating bit is a valid BitLit
-///
-/// This is functionally a recursive definition, with the base-case being `_1` and the recursive
-/// case being any multi-bit bitstring.
-///
-/// effectively, 0b100101 => (((((1), 0), 0), 1), 0) with `1` appended for the terminating BitLit
-impl<Bs, B> BitStrLit for BitString<Bs, B>
-where
-    Bs: BitStrLit,
-    B: BitLit,
-{
-}
-
-/// A BitString that is already a valid number evaluates to itself
-impl<Lhs, B> NumExpr for BitString<Lhs, B>
-where
-    Lhs: BitStrLit,
-    B: BitLit,
-{
-    type Ret = Self;
-}
-
-/// subtractions can lead to `BitString`s with invalid number representations. For example:
-///
-/// > `2 - 1` == `0b10 - 0b1` == (`0b1 - 0b1`, 0b1)
-///
-/// This means `2 - 1` Evaluates to `BitString<_0, _0>`, which is not a valid expression output.
-/// Leaving it just at that, `Sub<2, 1>` would not be able to have a valid `Expr` implementation,
-/// as its `Output` is not a valid `Number`. It needs to be trimmed
-///
-/// This `Expr` implementation trimms away leading 0-bits, thus allowing for `Sub<_, 1>`
-/// implementations.
+/// Trims 0-leading bitstrings semi-automagically
 impl<B> NumExpr for BitString<_0, B>
 where
     B: NumberVal,
@@ -82,11 +39,19 @@ where
     type Ret = B;
 }
 
+impl<Lhs, B> NumExpr for BitString<Lhs, B>
+where
+    Lhs: _BitStrLit,
+    B: _BitLit,
+{
+    type Ret = Self;
+}
+
 impl NumExpr for _0 {
-    type Ret = _0;
+    type Ret = Self;
 }
 impl NumExpr for _1 {
-    type Ret = _1;
+    type Ret = Self;
 }
 
 #[cfg(test)]

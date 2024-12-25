@@ -1,59 +1,61 @@
 use crate::{
+    _inners::{_Base, _BitLit, _BitStrLit},
     num_vals::{U0, U1},
     op_types::{AddExp, MulExp},
-    val_types::{BitLit, BitStrLit, NumberVal, _0, _1},
-    Base, BitString, NumExpr, NumRet,
+    prelude::B as BitString,
+    val_types::{NumberVal, _0, _1},
+    NumExpr, NumRet,
 };
 
 impl<L, R> NumExpr for MulExp<L, R>
 where
     L: NumExpr,
     R: NumExpr,
-    MulExp<L::Ret, R::Ret, Base>: NumExpr,
+    MulExp<L::Ret, R::Ret, _Base>: NumExpr,
 {
-    type Ret = NumRet<MulExp<L::Ret, R::Ret, Base>>;
+    type Ret = NumRet<MulExp<L::Ret, R::Ret, _Base>>;
 }
 // -------------
 // Hard codod base cases.
 // Past attempts to coallesce these impls resulted in overlapping-impl headaches
 // -------------
 
-impl NumExpr for MulExp<U0, U1, Base> {
+impl NumExpr for MulExp<U0, U1, _Base> {
     type Ret = U0;
 }
-impl NumExpr for MulExp<U1, U0, Base> {
+impl NumExpr for MulExp<U1, U0, _Base> {
     type Ret = U0;
 }
-impl NumExpr for MulExp<U0, U0, Base> {
+impl NumExpr for MulExp<U0, U0, _Base> {
     type Ret = U0;
 }
-impl NumExpr for MulExp<U1, U1, Base> {
+impl NumExpr for MulExp<U1, U1, _Base> {
     type Ret = U1;
 }
-impl<Bs, B> NumExpr for MulExp<U1, BitString<Bs, B>, Base>
+impl<Bs, B> NumExpr for MulExp<U1, BitString<Bs, B>, _Base>
 where
     Bs: NumExpr,
-    B: BitLit,
+    B: _BitLit,
     BitString<Bs, B>: NumberVal,
 {
     type Ret = BitString<Bs, B>;
 }
 
 // (LB, U1) * Val == ((LB * Val), U0) + Val
-impl<LB, Val> NumExpr for MulExp<BitString<LB, _1>, Val, Base>
+impl<LB, Val> NumExpr for MulExp<BitString<LB, _1>, Val, _Base>
 where
-    LB: BitStrLit,
+    LB: _BitStrLit,
     MulExp<LB, Val>: NumExpr,
     AddExp<BitString<NumRet<MulExp<LB, Val>>, _0>, Val>: NumExpr,
 {
     type Ret = NumRet<AddExp<BitString<NumRet<MulExp<LB, Val>>, _0>, Val>>;
 }
 // (LB, U0) * Val == ((LB * Val), U0)
-impl<LB, Val> NumExpr for MulExp<BitString<LB, _0>, Val, Base>
+impl<LB, Val> NumExpr for MulExp<BitString<LB, _0>, Val, _Base>
 where
-    LB: BitStrLit,
+    LB: _BitStrLit,
     MulExp<LB, Val>: NumExpr,
-    NumRet<MulExp<LB, Val>>: BitStrLit,
+    NumRet<MulExp<LB, Val>>: _BitStrLit,
 {
     type Ret = BitString<NumRet<MulExp<LB, Val>>, _0>;
 }
