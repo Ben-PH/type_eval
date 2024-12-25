@@ -1,5 +1,5 @@
 //! ```rust
-//! use type_eval::{op_types::AddExp, NumberVal, BoolExpr, ctrl_types::{True, LTE, GTE}, num_vals::U1};
+//! use type_eval::{prelude::*, BoolExpr};
 //! // A keyboard matrix trait.
 //! trait KBMatrix
 //! // TODO: impl non-zero
@@ -34,37 +34,43 @@
 //! }
 //! ```
 #![no_std]
+pub mod prelude {
+    pub use crate::{ctrl_types::*, num_vals::*, op_types::*, val_types::*};
+}
+/// Implementors of [`BoolExpr`]
 pub mod ctrl_types;
+/// Implementors of [`NumExpr`]
 pub mod op_types;
+/// Constructors for numbers expressed at the type-level
 pub mod val_types;
-use ctrl_types::BoolVal;
-pub use val_types::B;
-pub(crate) use val_types::B as BitString;
-pub use val_types::{NumberVal, _0, _1};
-mod expr;
+
+/// Integers expressed as types, e.g.: [`prelude::U0`], [`prelude::U1`]
 pub mod num_vals {
     include!(concat!(env!("OUT_DIR"), "/consts.rs"));
 }
+mod expr;
 
-pub trait ExprMode {}
-pub struct Recurse;
-pub struct Base;
-impl ExprMode for Recurse {}
-impl ExprMode for Base {}
+/// Inner implementation types. Generally not intended for end-use
+pub mod _inners;
 
+/// An expression returning a [`prelude::NumberVal`]
 pub trait NumExpr {
-    type Ret: NumberVal;
+    type Ret: val_types::NumberVal;
 }
-type NumRet<T> = <T as NumExpr>::Ret;
+/// <T as [NumExpr]>::Ret helper
+pub type NumRet<T> = <T as NumExpr>::Ret;
 
+/// An expression returning a [`prelude::BoolVal`]
 pub trait BoolExpr {
-    type Ret: BoolVal;
+    type Ret: prelude::BoolVal;
 }
-type BoolRet<T> = <T as BoolExpr>::Ret;
+/// <T as [BoolExpr]>::Ret helper
+pub type BoolRet<T> = <T as BoolExpr>::Ret;
 
 #[cfg(test)]
 mod test_res {
     use ctrl_types::{False, True};
+    use val_types::B as BitString;
     use val_types::_0;
 
     use crate::num_vals::*;

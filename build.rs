@@ -72,14 +72,14 @@ We define aliases for
 These alias definitions look like this:
 
 ```rust
-use type_eval::{{_0, _1, B}};
+use type_eval::prelude::*;
 
 # #[allow(dead_code)]
 type U6 = B<B<_1, _1>, _0>;
 ```
 
 */
-use crate::val_types::{{_0, _1, B}};
+use crate::prelude::*;
 ",
         highest = HIGHEST,
     )

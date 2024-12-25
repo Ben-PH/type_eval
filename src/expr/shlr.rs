@@ -1,28 +1,30 @@
 use crate::{
+    _inners::{_Base, _BitStrLit},
     num_vals::U1,
     op_types::{ShLExp, ShRExp, SubExp},
-    val_types::{BitStrLit, NumberVal, _0, _1},
-    Base, BitString, NumExpr, NumRet,
+    prelude::B as BitString,
+    val_types::{NumberVal, _0, _1},
+    NumExpr, NumRet,
 };
 
 impl<L, R> NumExpr for ShLExp<L, R>
 where
     L: NumExpr,
     R: NumExpr,
-    ShLExp<L::Ret, R::Ret, Base>: NumExpr,
+    ShLExp<L::Ret, R::Ret, _Base>: NumExpr,
 {
-    type Ret = NumRet<ShLExp<L::Ret, R::Ret, Base>>;
+    type Ret = NumRet<ShLExp<L::Ret, R::Ret, _Base>>;
 }
 
-impl<B> NumExpr for ShLExp<B, _0, Base>
+impl<B> NumExpr for ShLExp<B, _0, _Base>
 where
     B: NumberVal,
 {
     type Ret = B;
 }
-impl<B, N> NumExpr for ShLExp<B, N, Base>
+impl<B, N> NumExpr for ShLExp<B, N, _Base>
 where
-    B: BitStrLit,
+    B: _BitStrLit,
     SubExp<N, _1>: NumExpr,
     ShLExp<BitString<B, _0>, NumRet<SubExp<N, _1>>>: NumExpr,
 {
@@ -32,26 +34,26 @@ impl<L, R> NumExpr for ShRExp<L, R>
 where
     L: NumExpr,
     R: NumExpr,
-    ShRExp<L::Ret, R::Ret, Base>: NumExpr,
+    ShRExp<L::Ret, R::Ret, _Base>: NumExpr,
 {
-    type Ret = NumRet<ShRExp<L::Ret, R::Ret, Base>>;
+    type Ret = NumRet<ShRExp<L::Ret, R::Ret, _Base>>;
 }
 
-impl<B> NumExpr for ShRExp<B, _0, Base>
+impl<B> NumExpr for ShRExp<B, _0, _Base>
 where
     B: NumberVal,
 {
     type Ret = B;
 }
-impl<Bs, B, N> NumExpr for ShRExp<BitString<Bs, B>, N, Base>
+impl<Bs, B, N> NumExpr for ShRExp<BitString<Bs, B>, N, _Base>
 where
     Bs: NumExpr,
     SubExp<N, _1>: NumExpr,
-    ShRExp<Bs::Ret, NumRet<SubExp<N, _1>>, Base>: NumExpr,
+    ShRExp<Bs::Ret, NumRet<SubExp<N, _1>>, _Base>: NumExpr,
 {
-    type Ret = NumRet<ShRExp<Bs::Ret, NumRet<SubExp<N, _1>>, Base>>;
+    type Ret = NumRet<ShRExp<Bs::Ret, NumRet<SubExp<N, _1>>, _Base>>;
 }
-impl<N> NumExpr for ShRExp<U1, N, Base>
+impl<N> NumExpr for ShRExp<U1, N, _Base>
 where
     SubExp<N, _1>: NumExpr,
 {

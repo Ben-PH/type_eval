@@ -3,8 +3,10 @@ use core::marker::PhantomData;
 use crate::{
     num_vals::{U0, U1},
     op_types::{AddExp, LSB, MSB},
-    val_types::{BitLit, BitStrLit, NumberVal, _0, _1},
-    BitString, NumExpr, NumRet,
+    prelude::B as BitString,
+    val_types::{NumberVal, _0, _1},
+    NumExpr, NumRet,
+    _inners::{_BitLit, _BitStrLit},
 };
 
 impl<BS> NumExpr for MSB<BS>
@@ -37,8 +39,8 @@ where
 impl<Idx, BS, B> NumExpr for MSBCount<Idx, BitString<BS, B>>
 where
     Idx: NumberVal,
-    BS: NumberVal + BitStrLit,
-    B: BitLit,
+    BS: NumberVal + _BitStrLit,
+    B: _BitLit,
     AddExp<Idx, U1>: NumExpr,
     MSBCount<NumRet<AddExp<Idx, U1>>, BS>: NumExpr,
 {
@@ -75,7 +77,7 @@ where
 impl<Idx, BS> NumExpr for LSBCount<Idx, BitString<BS, _0>>
 where
     Idx: NumberVal,
-    BS: NumberVal + BitStrLit,
+    BS: NumberVal + _BitStrLit,
     AddExp<Idx, U1>: NumExpr,
     LSBCount<NumRet<AddExp<Idx, U1>>, BS>: NumExpr,
 {
@@ -84,7 +86,7 @@ where
 impl<Idx, BS> NumExpr for LSBCount<Idx, BitString<BS, _1>>
 where
     Idx: NumberVal,
-    BS: BitStrLit,
+    BS: _BitStrLit,
 {
     type Ret = Idx;
 }

@@ -1,8 +1,9 @@
 use crate::{
     num_vals::{U0, U1},
     op_types::SubExp,
+    prelude::B as BitString,
     val_types::{NumberVal, _0, _1},
-    BitString, NumExpr, NumRet,
+    NumExpr, NumRet,
 };
 use core::ops::Sub as StSub;
 
