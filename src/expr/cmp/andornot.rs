@@ -1,6 +1,7 @@
 use crate::{
     _inners::_Base,
     ctrl_types::{False, True, AND, OR},
+    prelude::NOT,
     BoolExpr, BoolRet,
 };
 
@@ -45,4 +46,11 @@ impl BoolExpr for OR<False, True, _Base> {
 }
 impl BoolExpr for OR<False, False, _Base> {
     type Ret = False;
+}
+
+impl BoolExpr for NOT<True> {
+    type Ret = False;
+}
+impl BoolExpr for NOT<False> {
+    type Ret = True;
 }

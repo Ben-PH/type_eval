@@ -19,6 +19,12 @@ impl BoolExpr for False {
     type Ret = Self;
 }
 
+pub struct IF<C: BoolExpr, T, F, M: _ExprMode = _Recurse> {
+    _if_check: PhantomData<C>,
+    _true_branch: PhantomData<T>,
+    _false_branch: PhantomData<F>,
+    _m: PhantomData<M>,
+}
 pub struct LT<L, R, M: _ExprMode = _Recurse> {
     _l: PhantomData<L>,
     _r: PhantomData<R>,
@@ -56,4 +62,7 @@ pub struct OR<L, R, M: _ExprMode = _Recurse> {
     _l: PhantomData<L>,
     _r: PhantomData<R>,
     _m: PhantomData<M>,
+}
+pub struct NOT<B> {
+    _bool: PhantomData<B>,
 }
