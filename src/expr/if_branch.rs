@@ -71,14 +71,15 @@ where
 mod test {
     use super::*;
     use crate::{
-        num_vals::{U0, U1, U2},
+        num_vals::{U0, U1, U2, U3},
+        op_types::AddExp,
         prelude::{MulExp, GT, LT, U5},
         test_res::*,
     };
     #[test]
-    fn eval_add() {
+    fn eval_if() {
         const _IF_T_1_2: () = _b1::<IF<LT<U0, U1>, U1, U2>>();
         const _IF_F_1_2: () = _b2::<IF<GT<U0, U1>, U1, U2>>();
-        const _ARITH: () = _b10::<IF<LT<U1, U2>, MulExp<U2, U5>, U0>>();
+        const _ARITH: () = _b10::<IF<LT<AddExp<U2, U3>, MulExp<U2, U3>>, MulExp<U2, U5>, U0>>();
     }
 }
