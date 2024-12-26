@@ -1,8 +1,10 @@
+use core::marker::PhantomData;
+
 use crate::{
-    _inners::{_Base, _BitLit, _BitStrLit},
+    _inners::_Base,
     ctrl_types::{False, True, GT},
-    prelude::B as BitString,
-    val_types::{_0, _1},
+    prelude::BoolVal,
+    val_types::{B, _0, _1},
     BoolExpr, BoolRet, NumExpr,
 };
 
@@ -26,39 +28,90 @@ impl BoolExpr for GT<_0, _0, _Base> {
 impl BoolExpr for GT<_1, _1, _Base> {
     type Ret = False;
 }
-
-impl<Bs, B, R> BoolExpr for GT<BitString<Bs, B>, R, _Base>
+impl<LBs, LB, RBs, RB> BoolExpr for GT<B<LBs, LB>, B<RBs, RB>, _Base>
 where
-    Bs: _BitStrLit,
-    B: _BitLit,
-    R: _BitLit,
+    GT<LB, RB, _Base>: BoolExpr,
+    _BitwiseGT<BoolRet<GT<LB, RB, _Base>>, LBs, RBs>: BoolExpr,
+{
+    type Ret = BoolRet<_BitwiseGT<BoolRet<GT<LB, RB, _Base>>, LBs, RBs>>;
+}
+impl<RBs, RB> BoolExpr for GT<_0, B<RBs, RB>, _Base> {
+    type Ret = False;
+}
+impl<RBs, RB> BoolExpr for GT<_1, B<RBs, RB>, _Base> {
+    type Ret = False;
+}
+impl<LBs, LB> BoolExpr for GT<B<LBs, LB>, _1, _Base> {
+    type Ret = True;
+}
+impl<LBs, LB> BoolExpr for GT<B<LBs, LB>, _0, _Base> {
+    type Ret = True;
+}
+
+pub struct _BitwiseGT<C: BoolVal, L, R> {
+    _cache: PhantomData<C>,
+    _lhs: PhantomData<L>,
+    _rhs: PhantomData<R>,
+}
+impl<C, RBs, RB> BoolExpr for _BitwiseGT<C, _1, B<RBs, RB>>
+where
+    C: BoolVal,
+{
+    type Ret = False;
+}
+impl<C> BoolExpr for _BitwiseGT<C, _1, _1>
+where
+    C: BoolVal,
+{
+    type Ret = C;
+}
+impl<C, LBs, LB> BoolExpr for _BitwiseGT<C, B<LBs, LB>, _1>
+where
+    C: BoolVal,
 {
     type Ret = True;
 }
 
-impl<Bs, B, L> BoolExpr for GT<L, BitString<Bs, B>, _Base>
+impl<C, LBs, LB> BoolExpr for _BitwiseGT<C, B<LBs, LB>, _0>
 where
-    Bs: _BitStrLit,
-    B: _BitLit,
-    L: _BitLit,
+    C: BoolVal,
 {
-    type Ret = False;
+    type Ret = True;
 }
-impl<LBs, LB, RBs, RB> BoolExpr for GT<BitString<LBs, LB>, BitString<RBs, RB>, _Base>
+
+impl<C, LBs, RBs> BoolExpr for _BitwiseGT<C, B<LBs, _0>, B<RBs, _0>>
 where
-    LBs: _BitStrLit,
-    LB: _BitLit,
-    RBs: _BitStrLit,
-    RB: _BitLit,
-    GT<LB, RB>: BoolExpr,
+    C: BoolVal,
+    _BitwiseGT<C, LBs, RBs>: BoolExpr,
 {
-    type Ret = BoolRet<GT<LB, RB>>;
+    type Ret = BoolRet<_BitwiseGT<C, LBs, RBs>>;
+}
+impl<C, LBs, RBs> BoolExpr for _BitwiseGT<C, B<LBs, _1>, B<RBs, _1>>
+where
+    C: BoolVal,
+    _BitwiseGT<C, LBs, RBs>: BoolExpr,
+{
+    type Ret = BoolRet<_BitwiseGT<C, LBs, RBs>>;
+}
+impl<C, LBs, RBs> BoolExpr for _BitwiseGT<C, B<LBs, _0>, B<RBs, _1>>
+where
+    C: BoolVal,
+    _BitwiseGT<False, LBs, RBs>: BoolExpr,
+{
+    type Ret = BoolRet<_BitwiseGT<False, LBs, RBs>>;
+}
+impl<C, LBs, RBs> BoolExpr for _BitwiseGT<C, B<LBs, _1>, B<RBs, _0>>
+where
+    C: BoolVal,
+    _BitwiseGT<True, LBs, RBs>: BoolExpr,
+{
+    type Ret = BoolRet<_BitwiseGT<True, LBs, RBs>>;
 }
 #[cfg(test)]
 mod test {
     use super::*;
     use crate::{
-        num_vals::{U0, U1, U2, U3, U4, U6, U7},
+        num_vals::{U0, U1, U2, U3, U4, U5, U6, U7},
         test_res::*,
     };
     #[test]
@@ -67,10 +120,13 @@ mod test {
         const _1_GT_0: () = _t::<GT<U1, U0>>();
         const _1_GT_1: () = _f::<GT<U1, U1>>();
         const _2_GT_1: () = _t::<GT<U2, U1>>();
+        const _2_GT_0: () = _t::<GT<U2, U0>>();
+        const _2_GT_4: () = _f::<GT<U2, U4>>();
         const _1_GT_2: () = _f::<GT<U1, U2>>();
         const _3_GT_1: () = _t::<GT<U3, U1>>();
         const _4_GT_1: () = _t::<GT<U4, U1>>();
-        // const _5_GT_6: () = _f::<GT<U5, U6>>();
+        const _4_GT_2: () = _t::<GT<U4, U2>>();
+        const _5_GT_6: () = _f::<GT<U5, U6>>();
         const _1_GT_3: () = _f::<GT<U1, U3>>();
         const _1_GT_4: () = _f::<GT<U1, U4>>();
         const _2_GT_2: () = _f::<GT<U2, U2>>();
