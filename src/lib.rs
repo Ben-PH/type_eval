@@ -66,10 +66,16 @@ pub trait BoolExpr {
 }
 /// <T as [BoolExpr]>::Ret helper
 pub type BoolRet<T> = <T as BoolExpr>::Ret;
+/// An expression returning a [`prelude::BoolVal`]
+pub trait OrdExpr {
+    type Ret: prelude::OrdVal;
+}
+/// <T as [BoolExpr]>::Ret helper
+pub type OrdRet<T> = <T as OrdExpr>::Ret;
 
 #[cfg(test)]
 mod test_res {
-    use ctrl_types::{False, True};
+    use ctrl_types::{Eq, False, Gr8r, Less, True};
     use val_types::B as BitString;
     use val_types::_0;
 
@@ -91,6 +97,9 @@ mod test_res {
 
     pub(crate) const fn _t<E: BoolExpr<Ret = True>>() {}
     pub(crate) const fn _f<E: BoolExpr<Ret = False>>() {}
+    pub(crate) const fn _lt<E: OrdExpr<Ret = Less>>() {}
+    pub(crate) const fn _eq<E: OrdExpr<Ret = Eq>>() {}
+    pub(crate) const fn _gt<E: OrdExpr<Ret = Gr8r>>() {}
     #[test]
     fn eval_add() {
         const _0_0: () = _b0::<BitString<_0, _0>>();

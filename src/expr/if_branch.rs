@@ -1,6 +1,6 @@
 use crate::{
     prelude::{False, True, IF},
-    BoolExpr, BoolRet, NumExpr, NumRet,
+    BoolExpr, BoolRet, NumExpr, NumRet, OrdExpr, OrdRet,
     _inners::_Base,
 };
 
@@ -45,6 +45,27 @@ where
     F: BoolExpr,
 {
     type Ret = BoolRet<F>;
+}
+impl<C, T, F> OrdExpr for IF<C, T, F>
+where
+    C: BoolExpr,
+    BoolRet<C>: BoolExpr,
+    IF<C::Ret, T, F, _Base>: OrdExpr,
+{
+    type Ret = OrdRet<IF<C::Ret, T, F, _Base>>;
+}
+
+impl<T, F> OrdExpr for IF<True, T, F, _Base>
+where
+    T: OrdExpr,
+{
+    type Ret = OrdRet<T>;
+}
+impl<T, F> OrdExpr for IF<False, T, F, _Base>
+where
+    F: OrdExpr,
+{
+    type Ret = OrdRet<F>;
 }
 #[cfg(test)]
 mod test {
