@@ -2,6 +2,7 @@
 
 mod add;
 mod cmp;
+mod if_branch;
 mod mlsb;
 mod mul;
 mod shlr;

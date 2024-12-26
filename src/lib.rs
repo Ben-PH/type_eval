@@ -87,6 +87,7 @@ mod test_res {
     pub(crate) const fn _b7<E: NumExpr<Ret = U7>>() {}
     pub(crate) const fn _b8<E: NumExpr<Ret = U8>>() {}
     pub(crate) const fn _b9<E: NumExpr<Ret = U9>>() {}
+    pub(crate) const fn _b10<E: NumExpr<Ret = U10>>() {}
 
     pub(crate) const fn _t<E: BoolExpr<Ret = True>>() {}
     pub(crate) const fn _f<E: BoolExpr<Ret = False>>() {}

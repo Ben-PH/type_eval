@@ -1,4 +1,4 @@
-mod andor;
+mod andornot;
 mod eq;
 mod gt;
 mod lt;

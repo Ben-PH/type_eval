@@ -54,3 +54,28 @@ where
 {
     type Ret = BoolRet<GT<LB, RB>>;
 }
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::{
+        num_vals::{U0, U1, U2, U3, U4, U6, U7},
+        test_res::*,
+    };
+    #[test]
+    fn eval_gt() {
+        const _0_GT_0: () = _f::<GT<U0, U0>>();
+        const _1_GT_0: () = _t::<GT<U1, U0>>();
+        const _1_GT_1: () = _f::<GT<U1, U1>>();
+        const _2_GT_1: () = _t::<GT<U2, U1>>();
+        const _1_GT_2: () = _f::<GT<U1, U2>>();
+        const _3_GT_1: () = _t::<GT<U3, U1>>();
+        const _4_GT_1: () = _t::<GT<U4, U1>>();
+        // const _5_GT_6: () = _f::<GT<U5, U6>>();
+        const _1_GT_3: () = _f::<GT<U1, U3>>();
+        const _1_GT_4: () = _f::<GT<U1, U4>>();
+        const _2_GT_2: () = _f::<GT<U2, U2>>();
+        const _3_GT_3: () = _f::<GT<U3, U3>>();
+        const _6_GT_1: () = _t::<GT<U6, U1>>();
+        const _7_GT_1: () = _t::<GT<U7, U1>>();
+    }
+}
