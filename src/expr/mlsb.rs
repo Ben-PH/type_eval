@@ -93,17 +93,24 @@ where
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{op_types::LSB, test_res::*};
+    use crate::{
+        num_vals::{U2, U3},
+        op_types::LSB,
+        test_res::*,
+    };
     #[allow(non_upper_case_globals)]
     #[test]
     fn eval_msb() {
         const ___0: () = _b0::<MSB<_0>>();
         const ___1: () = _b0::<MSB<_1>>();
+        const __U2: () = _b1::<MSB<U2>>();
         const __10: () = _b1::<MSB<BitString<_1, _0>>>();
+        const __U3: () = _b1::<MSB<U3>>();
         const __11: () = _b1::<MSB<BitString<_1, _1>>>();
-        const _111: () = _b2::<MSB<BitString<BitString<_1, _1>, _1>>>();
+        const _100: () = _b2::<MSB<BitString<BitString<_1, _0>, _0>>>();
         const _101: () = _b2::<MSB<BitString<BitString<_1, _0>, _1>>>();
         const _110: () = _b2::<MSB<BitString<BitString<_1, _1>, _0>>>();
+        const _111: () = _b2::<MSB<BitString<BitString<_1, _1>, _1>>>();
     }
     #[allow(non_upper_case_globals)]
     #[test]

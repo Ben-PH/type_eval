@@ -69,22 +69,26 @@ mod test {
     };
     #[allow(non_upper_case_globals)]
     #[test]
-    fn eval_msb() {
-        const _0_ShL_0: () = _b0::<ShLExp<_0, U0>>();
-        const _1_ShL_0: () = _b1::<ShLExp<_1, U0>>();
-        const _1_ShL_1: () = _b2::<ShLExp<_1, U1>>();
-        const _1_ShR_1: () = _b0::<ShRExp<_1, U1>>();
-        const _1_ShR_0: () = _b1::<ShRExp<_1, U0>>();
+    fn eval_shl() {
+        const _0_ShL_0: () = _b0::<ShLExp<U0, U0>>();
+        const _1_ShL_0: () = _b1::<ShLExp<U1, U0>>();
+        const _1_ShL_1: () = _b2::<ShLExp<U1, U1>>();
+        const _1_ShL_2: () = _b4::<ShLExp<U1, U2>>();
+        const _1_ShL_3: () = _b8::<ShLExp<U1, U3>>();
+    }
 
+    #[allow(non_upper_case_globals)]
+    #[test]
+    fn eval_shr() {
+        const _1_ShR_1: () = _b0::<ShRExp<U1, U1>>();
+        const _1_ShR_0: () = _b1::<ShRExp<U1, U0>>();
         const _10_ShR_0: () = _b2::<ShRExp<BitString<_1, _0>, U0>>();
         const _11_ShR_0: () = _b3::<ShRExp<BitString<_1, _1>, U0>>();
         const _10_ShR_1: () = _b1::<ShRExp<BitString<_1, _0>, U1>>();
         const _11_ShR_1: () = _b1::<ShRExp<BitString<_1, _1>, U1>>();
 
-        const _1_ShL_2: () = _b1::<ShLExp<_1, U0>>();
-        const _1_ShL_3: () = _b2::<ShLExp<_1, U1>>();
-        const _3_ShR_2: () = _b0::<ShRExp<U3, U2>>();
-        const _9_ShR_3: () = _b1::<ShRExp<U9, U3>>();
+        const ___11_ShR_2: () = _b0::<ShRExp<U3, U2>>();
+        const _1001_ShR_3: () = _b1::<ShRExp<U9, U3>>();
         // const _MSB_10: () = _b1::<MSB<BitString<_1, _0>>>();
         // const _MSB_11: () = _b1::<MSB<BitString<_1, _1>>>();
         // const _MSB_100: () = _b1::<MSB<BitString<BitString<_1, _0>, _1>>>();
