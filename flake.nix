@@ -22,7 +22,7 @@
       {
         devShells.default = mkShell {
           buildInputs = [
-            rust-bin.stable.latest.default
+            rust-bin.nightly."2024-10-17".default
           ];
 
           shellHook = ''

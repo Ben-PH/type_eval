@@ -33,6 +33,7 @@
 //!     type YLoc: NumberVal;
 //! }
 //! ```
+// #![feature(trivial_bounds)]
 #![no_std]
 pub mod prelude {
     pub use crate::{ctrl_types::*, num_vals::*, op_types::*, val_types::*};
