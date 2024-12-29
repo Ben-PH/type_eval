@@ -1,7 +1,15 @@
 [package]
 name = "type_eval"
-version = "0.1.0"
+version = "0.0.1-alpha"
 edition = "2021"
+authors = ["Ben Pieters-Hawke <benphawke@gmail.com>", "Remy Pierre Bushnell Clarke"]
+description = "Type level evaluation and proof-carrying"
+keywords = ["proof-carrying-code", "type-evaluation", "const"]
+categories = ["no-std", "embedded", "mathematics"]
+readme = "README.md"
+repository = "https://github.com/Ben-PH/type_eval"
+license = "MIT OR Apache-2.0"
+
 
 [build-dependencies]
 bitvec = "1.0.1"
