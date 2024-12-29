@@ -42,6 +42,12 @@ impl StSub<U1> for U1 {
         unimplemented!("type eval only")
     }
 }
+impl<LBs, LB> StSub<U0> for BitString<LBs, LB> {
+    type Output = BitString<LBs, LB>;
+    fn sub(self, _rhs: U0) -> Self::Output {
+        unimplemented!("type eval only")
+    }
+}
 // Commented out as we are not yet handling negatives
 // impl Expr for Sub<_0, U1, Base> {
 //     type Ret = U1;
@@ -151,6 +157,7 @@ mod test {
         const _1_SUB_0: () = _b1::<SubExp<U1, U0>>();
         const _1_SUB_1: () = _b0::<SubExp<U1, U1>>();
         const _2_SUB_1: () = _b1::<SubExp<U2, U1>>();
+        const _2_SUB_0: () = _b2::<SubExp<U2, U0>>();
         // const _1_SUB_2: () = _b3::<SubExp<_1, BitString<_1, _0>>>();
         const _3_SUB_1: () = _b2::<SubExp<U3, _1>>();
         const _4_SUB_1: () = _b3::<SubExp<BitString<BitString<_1, _0>, _0>, _1>>();
