@@ -1,6 +1,6 @@
 [package]
 name = "type_eval"
-version = "0.0.1-alpha"
+version = "0.0.2-alpha"
 edition = "2021"
 authors = ["Ben Pieters-Hawke <benphawke@gmail.com>", "Remy Pierre Bushnell Clarke"]
 description = "Type level evaluation and proof-carrying"
