@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - in-memory representation
 - `lhs % rhs` expression
 - `gcd(numer, denom)` expression
+- `gcd(lhs, rhs)` expression
 
 ### Marked for Deprecation
 
