@@ -3,8 +3,10 @@ use core::marker::PhantomData;
 use crate::{
     num_vals::{U0, U1},
     op_types::{AddExp, LSB, MSB},
-    val_types::{BitLit, BitStrLit, NumberVal, _0, _1},
-    BitString, NumExpr, NumRet,
+    prelude::B as BitString,
+    val_types::{NumberVal, _0, _1},
+    NumExpr, NumRet,
+    _inners::{_BitLit, _BitStrLit},
 };
 
 impl<BS> NumExpr for MSB<BS>
@@ -37,8 +39,8 @@ where
 impl<Idx, BS, B> NumExpr for MSBCount<Idx, BitString<BS, B>>
 where
     Idx: NumberVal,
-    BS: NumberVal + BitStrLit,
-    B: BitLit,
+    BS: NumberVal + _BitStrLit,
+    B: _BitLit,
     AddExp<Idx, U1>: NumExpr,
     MSBCount<NumRet<AddExp<Idx, U1>>, BS>: NumExpr,
 {
@@ -75,7 +77,7 @@ where
 impl<Idx, BS> NumExpr for LSBCount<Idx, BitString<BS, _0>>
 where
     Idx: NumberVal,
-    BS: NumberVal + BitStrLit,
+    BS: NumberVal + _BitStrLit,
     AddExp<Idx, U1>: NumExpr,
     LSBCount<NumRet<AddExp<Idx, U1>>, BS>: NumExpr,
 {
@@ -84,24 +86,31 @@ where
 impl<Idx, BS> NumExpr for LSBCount<Idx, BitString<BS, _1>>
 where
     Idx: NumberVal,
-    BS: BitStrLit,
+    BS: _BitStrLit,
 {
     type Ret = Idx;
 }
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::{op_types::LSB, test_res::*};
+    use crate::{
+        num_vals::{U2, U3},
+        op_types::LSB,
+        test_res::*,
+    };
     #[allow(non_upper_case_globals)]
     #[test]
     fn eval_msb() {
         const ___0: () = _b0::<MSB<_0>>();
         const ___1: () = _b0::<MSB<_1>>();
+        const __U2: () = _b1::<MSB<U2>>();
         const __10: () = _b1::<MSB<BitString<_1, _0>>>();
+        const __U3: () = _b1::<MSB<U3>>();
         const __11: () = _b1::<MSB<BitString<_1, _1>>>();
-        const _111: () = _b2::<MSB<BitString<BitString<_1, _1>, _1>>>();
+        const _100: () = _b2::<MSB<BitString<BitString<_1, _0>, _0>>>();
         const _101: () = _b2::<MSB<BitString<BitString<_1, _0>, _1>>>();
         const _110: () = _b2::<MSB<BitString<BitString<_1, _1>, _0>>>();
+        const _111: () = _b2::<MSB<BitString<BitString<_1, _1>, _1>>>();
     }
     #[allow(non_upper_case_globals)]
     #[test]

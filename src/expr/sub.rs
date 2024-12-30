@@ -1,8 +1,9 @@
 use crate::{
     num_vals::{U0, U1},
     op_types::SubExp,
+    prelude::B as BitString,
     val_types::{NumberVal, _0, _1},
-    BitString, NumExpr, NumRet,
+    NumExpr, NumRet,
 };
 use core::ops::Sub as StSub;
 
@@ -38,6 +39,12 @@ impl StSub<U0> for U1 {
 impl StSub<U1> for U1 {
     type Output = U0;
     fn sub(self, _rhs: U1) -> Self::Output {
+        unimplemented!("type eval only")
+    }
+}
+impl<LBs, LB> StSub<U0> for BitString<LBs, LB> {
+    type Output = BitString<LBs, LB>;
+    fn sub(self, _rhs: U0) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
@@ -150,6 +157,7 @@ mod test {
         const _1_SUB_0: () = _b1::<SubExp<U1, U0>>();
         const _1_SUB_1: () = _b0::<SubExp<U1, U1>>();
         const _2_SUB_1: () = _b1::<SubExp<U2, U1>>();
+        const _2_SUB_0: () = _b2::<SubExp<U2, U0>>();
         // const _1_SUB_2: () = _b3::<SubExp<_1, BitString<_1, _0>>>();
         const _3_SUB_1: () = _b2::<SubExp<U3, _1>>();
         const _4_SUB_1: () = _b3::<SubExp<BitString<BitString<_1, _0>, _0>, _1>>();

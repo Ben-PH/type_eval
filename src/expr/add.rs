@@ -1,8 +1,10 @@
 use crate::{
     num_vals::{U0, U1},
     op_types::AddExp,
-    val_types::{BitStrLit, NumberVal, _0, _1},
-    BitString, NumExpr,
+    prelude::B as BitString,
+    val_types::{NumberVal, _0, _1},
+    NumExpr,
+    _inners::_BitStrLit,
 };
 use core::ops::Add as StAdd;
 
@@ -52,7 +54,7 @@ impl StAdd<U1> for U1 {
 // ---
 impl<B> StAdd<U1> for BitString<B, _0>
 where
-    B: BitStrLit,
+    B: _BitStrLit,
 {
     type Output = BitString<B, _1>;
     fn add(self, _rhs: U1) -> Self::Output {
@@ -61,7 +63,7 @@ where
 }
 impl<B> StAdd<BitString<B, _0>> for U1
 where
-    B: BitStrLit,
+    B: _BitStrLit,
 {
     type Output = BitString<B, _1>;
     fn add(self, _rhs: BitString<B, _0>) -> Self::Output {
@@ -77,7 +79,7 @@ where
     // Recurse the carry
     B: StAdd<U1>,
     // Ensure the carry recursion is a valid progression
-    AddOut<B, U1>: BitStrLit,
+    AddOut<B, U1>: _BitStrLit,
 {
     type Output = BitString<AddOut<B, U1>, _0>;
     fn add(self, _rhs: U1) -> Self::Output {
@@ -88,7 +90,7 @@ where
 impl<B> StAdd<BitString<B, _1>> for U1
 where
     B: StAdd<U1>,
-    AddOut<B, U1>: BitStrLit,
+    AddOut<B, U1>: _BitStrLit,
 {
     type Output = BitString<AddOut<B, U1>, _0>;
     fn add(self, _rhs: BitString<B, _1>) -> Self::Output {
@@ -103,7 +105,7 @@ where
 impl<LB, RB> StAdd<BitString<RB, _0>> for BitString<LB, _0>
 where
     LB: StAdd<RB>,
-    AddOut<LB, RB>: BitStrLit,
+    AddOut<LB, RB>: _BitStrLit,
 {
     type Output = BitString<AddOut<LB, RB>, _0>;
     fn add(self, _rhs: BitString<RB, _0>) -> Self::Output {
@@ -114,7 +116,7 @@ where
 impl<LB, RB> StAdd<BitString<RB, _1>> for BitString<LB, _0>
 where
     LB: StAdd<RB>,
-    AddOut<LB, RB>: BitStrLit,
+    AddOut<LB, RB>: _BitStrLit,
 {
     type Output = BitString<AddOut<LB, RB>, _1>;
     fn add(self, _rhs: BitString<RB, _1>) -> Self::Output {
@@ -124,7 +126,7 @@ where
 impl<LB, RB> StAdd<BitString<RB, _0>> for BitString<LB, _1>
 where
     LB: StAdd<RB>,
-    AddOut<LB, RB>: BitStrLit,
+    AddOut<LB, RB>: _BitStrLit,
 {
     type Output = BitString<AddOut<LB, RB>, _1>;
     fn add(self, _rhs: BitString<RB, _0>) -> Self::Output {
@@ -135,8 +137,8 @@ where
 impl<LB, RB> StAdd<BitString<RB, _1>> for BitString<LB, _1>
 where
     LB: StAdd<RB>,
-    AddOut<LB, RB>: BitStrLit + StAdd<U1>,
-    AddOut<AddOut<LB, RB>, U1>: BitStrLit,
+    AddOut<LB, RB>: _BitStrLit + StAdd<U1>,
+    AddOut<AddOut<LB, RB>, U1>: _BitStrLit,
     // AddExp<NumRet<NumRet<AddExp<LB, RB>>>, U1>: NumExpr,
     // NumRet<AddExp<NumRet<NumRet<AddExp<LB, RB>>>, U1>>: BitStrLit,
 {

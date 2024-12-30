@@ -1,8 +1,9 @@
-mod andor;
+mod andornot;
 mod eq;
 mod gt;
 mod lt;
 mod ltegte;
+mod ord;
 
 #[cfg(test)]
 mod test {

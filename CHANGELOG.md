@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Marked for Deprecation
 
-## [v0.1.0] (work in progress)
+## [v0.0.1-alpha]
 
 > Initial release
 
@@ -34,9 +34,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Expressions resolving to non-negative numbers
-  - +, -, *, <<, >>,  
+  - +, -, *, /, <<, >>,  
 - Expressions resolving to booleans
   - Comprison checks (&&, ||, ==, <>[=])
+- `if/else` branch control
 - `CHANGELOG.md`
 
 ### Marked for Deprecation
