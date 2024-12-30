@@ -155,6 +155,24 @@ mod expr;
 /// Inner implementation types. Generally not intended for end-use
 pub mod _inners;
 
+// TODO: break down the traits so that memory-representations are only implemented
+// where the type fits in said representation.
+// e.g. u8 is only valid when the bit-tring is 0..=255
+/// In-memory representation, e.g. [u32]
+/// ```rust
+/// use type_eval::num_vals::U4;
+/// use type_eval::MemRep;
+/// assert_eq!(4, U4::MU32)
+/// ```
+#[allow(clippy::cast_possible_truncation)]
+pub trait MemRep {
+    const MU128: u128;
+    const MUSIZE: usize = Self::MU128 as usize;
+    const MU64: u64 = Self::MU128 as u64;
+    const MU32: u32 = Self::MU128 as u32;
+    const MU16: u16 = Self::MU128 as u16;
+    const MU8: u8 = Self::MU128 as u8;
+}
 /// An expression returning a [`prelude::NumberVal`]
 pub trait NumExpr {
     type Ret: val_types::NumberVal;
