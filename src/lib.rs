@@ -6,7 +6,7 @@
 //!
 //! ```rust
 //! # use type_eval::{prelude::*, BoolExpr, NumExpr};
-//! #[deprecated(note="use NumRet<DivExpr> instead")]
+//! #[deprecated(note="use `NumRet::<DivExpr>::$TYPE` instead")]
 //! use core::ops::Div;
 //! use core::cmp::Eq;
 //! pub const fn safe_div_u32(numerator: u32, denominator: u32) -> Option<u32> {
@@ -17,13 +17,26 @@
 //!     }
 //! }
 //!
-//! use type_eval::{NumRet, /* MemRep */};
+//! use type_eval::{NumRet, MemRep};
 //! fn main() {
 //!     // let safe_dived = safe_div(4u16, 2usize);
-//!     // TODO: memory representatiov will be released very shortly
-//!     // let safe_dived = NumRet<DivExp<U4, U2>>::U32;
+//!     let safe_dived = NumRet::<DivExp<U4, U2>>::MU32;
 //! }
 //! ```
+//!
+//! ### Calculated array length
+//!
+//!```
+//! use type_eval::{num_vals::*, prelude::*, NumRet, MemRep};
+//! type Area<Width, Height> = NumRet::<MulExp<Width, Height>>;
+//! fn area_array<const S: usize>(array: [u8; S])
+//! { }
+//!
+//! fn main() {
+//!     area_array([0u8; Area::<U3, U4>::MUSIZE]);
+//! }
+//!
+//!```
 //! ### Enforce predicates/preconditions into the type-system:
 //!
 //!```
