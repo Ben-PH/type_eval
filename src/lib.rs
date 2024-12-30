@@ -6,7 +6,7 @@
 //!
 //! ```rust
 //! # use type_eval::{prelude::*, BoolExpr, NumExpr};
-//! #[deprecated(note="use NumRet<DivExpr> instead")]
+//! #[deprecated(note="use `NumRet::<DivExpr>::$TYPE` instead")]
 //! use core::ops::Div;
 //! use core::cmp::Eq;
 //! pub const fn safe_div_u32(numerator: u32, denominator: u32) -> Option<u32> {
@@ -17,13 +17,26 @@
 //!     }
 //! }
 //!
-//! use type_eval::{NumRet, /* MemRep */};
+//! use type_eval::{NumRet, MemRep};
 //! fn main() {
 //!     // let safe_dived = safe_div(4u16, 2usize);
-//!     // TODO: memory representatiov will be released very shortly
-//!     // let safe_dived = NumRet<DivExp<U4, U2>>::U32;
+//!     let safe_dived = NumRet::<DivExp<U4, U2>>::MU32;
 //! }
 //! ```
+//!
+//! ### Calculated array length
+//!
+//!```
+//! use type_eval::{num_vals::*, prelude::*, NumRet, MemRep};
+//! type Area<Width, Height> = NumRet::<MulExp<Width, Height>>;
+//! fn area_array<const S: usize>(array: [u8; S])
+//! { }
+//!
+//! fn main() {
+//!     area_array([0u8; Area::<U3, U4>::MUSIZE]);
+//! }
+//!
+//!```
 //! ### Enforce predicates/preconditions into the type-system:
 //!
 //!```
@@ -155,6 +168,24 @@ mod expr;
 /// Inner implementation types. Generally not intended for end-use
 pub mod _inners;
 
+// TODO: break down the traits so that memory-representations are only implemented
+// where the type fits in said representation.
+// e.g. u8 is only valid when the bit-tring is 0..=255
+/// In-memory representation, e.g. [u32]
+/// ```rust
+/// use type_eval::num_vals::U4;
+/// use type_eval::MemRep;
+/// assert_eq!(4, U4::MU32)
+/// ```
+#[allow(clippy::cast_possible_truncation)]
+pub trait MemRep {
+    const MU128: u128;
+    const MUSIZE: usize = Self::MU128 as usize;
+    const MU64: u64 = Self::MU128 as u64;
+    const MU32: u32 = Self::MU128 as u32;
+    const MU16: u16 = Self::MU128 as u16;
+    const MU8: u8 = Self::MU128 as u8;
+}
 /// An expression returning a [`prelude::NumberVal`]
 pub trait NumExpr {
     type Ret: val_types::NumberVal;
