@@ -3,8 +3,11 @@
 mod add;
 mod cmp;
 mod div;
+mod gcd;
 mod if_branch;
+mod lcm;
 mod mlsb;
+mod modulo;
 mod mul;
 mod shlr;
 mod sub;

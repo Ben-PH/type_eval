@@ -72,11 +72,11 @@ where
 #[cfg(test)]
 #[allow(clippy::used_underscore_items)]
 mod test {
+    use crate::{num_vals::*, prelude::U4, MemRep};
     use crate::{
         test_res::*,
         val_types::{B, _0, _1},
     };
-    use crate::{num_vals::*, prelude::U4, MemRep};
     #[test]
     fn eval_trim() {
         const _0_0: () = _b0::<B<_0, _0>>();
