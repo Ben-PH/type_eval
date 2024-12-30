@@ -25,6 +25,11 @@ pub struct ModExp<N, D, NltD = _Recurse> {
     _d: PhantomData<D>,
     _cmp: PhantomData<NltD>,
 }
+pub struct GcdExp<Lhs, Rhs, Acc = _Recurse> {
+    _l: PhantomData<Lhs>,
+    _r: PhantomData<Rhs>,
+    _m: PhantomData<Acc>,
+}
 pub struct ShLExp<Bs, N, M = _Recurse> {
     _bits: PhantomData<Bs>,
     _shift_count: PhantomData<N>,
