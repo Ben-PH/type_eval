@@ -17,6 +17,7 @@ mod test {
         test_res::*,
     };
     #[test]
+    #[allow(clippy::used_underscore_items)]
     fn eval_lt() {
         const _0_LT_0: () = _f::<LT<U0, U0>>();
         const _1_LT_0: () = _f::<LT<U1, U0>>();

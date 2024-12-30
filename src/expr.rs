@@ -10,6 +10,7 @@ mod shlr;
 mod sub;
 
 #[cfg(test)]
+#[allow(clippy::used_underscore_items)]
 mod test {
     use crate::{prelude::*, test_res::*, BoolExpr, NumExpr};
 

@@ -1,4 +1,104 @@
+//! `type_eval` provides data and evaluation types to the compiler, unburdened
+//! by the limitations of execution code semantics.
+//!
+//!
+//! ### Erase requirement of machine representation:
+//!
 //! ```rust
+//! # use type_eval::{prelude::*, BoolExpr, NumExpr};
+//! #[deprecated(note="use NumRet<DivExpr> instead")]
+//! use core::ops::Div;
+//! use core::cmp::Eq;
+//! pub const fn safe_div_u32(numerator: u32, denominator: u32) -> Option<u32> {
+//!     if denominator == 0 {
+//!         None
+//!     } else {
+//!         Some(numerator / denominator)
+//!     }
+//! }
+//!
+//! use type_eval::{NumRet, /* MemRep */};
+//! fn main() {
+//!     // let safe_dived = safe_div(4u16, 2usize);
+//!     // TODO: memory representatiov will be released very shortly
+//!     // let safe_dived = NumRet<DivExp<U4, U2>>::U32;
+//! }
+//! ```
+//! ### Enforce predicates/preconditions into the type-system:
+//!
+//!```
+//! # use type_eval::{prelude::*, BoolExpr, NumExpr};
+//!
+//! // define functions that carry a proof of evaluation result
+//! const fn _b0<E: NumExpr<Ret = U0>>() {}
+//! const fn _b1<E: NumExpr<Ret = U1>>() {}
+//! const fn _b2<E: NumExpr<Ret = U2>>() {}
+//! const fn _b3<E: NumExpr<Ret = U3>>() {}
+//! #[allow(non_upper_case_globals)]
+//! fn add_sub() {
+//!     const _2_ADD_1__SUB_3: () = _b0::<SubExp<AddExp<U2, U1>, U3>>();
+//!     const _6_SUB__1_ADD_3: () = _b2::<SubExp<U6, AddExp<U1, U3>>>();
+//!     // const COMPILE_FAIL: () = _b2::<SubExp<U7, AddExp<U1, U3>>>();
+//!
+//! }
+//!
+//! fn shift_msb() {
+//!     const _MSB__2_SHL_1: () = _b2::<MSB<ShLExp<U2, U1>>>();
+//!     const _MSB__2_SHL_0: () = _b1::<MSB<ShLExp<U2, U0>>>();
+//!
+//!     const _MSB_4__SUB__MSB_3: () = _b1::<SubExp<MSB<U4>, MSB<U3>>>();
+//!     const _MSB_4__ADD__MSB_3: () = _b3::<AddExp<MSB<U4>, MSB<U3>>>();
+//! }
+//!
+//! fn ifs() {
+//!     // if (1/2) < 1 {0} else {1 / 0}
+//!     const _IF_T_U0_DIV0: () = _b0::<IF<LT<DivExp<U1, U2>, U1>, U0, DivExp<U1, U0>>>();
+//!     // div-by-zero is a compile fail
+//!     // const _COMPILE_FAIL: () = _b0::<DivExp<U1, U0>>();
+//! }
+//!
+//! fn lt4() {
+//!     // define a function that carries a proof of evaluaton result < 6
+//!     const fn _lt6<E: NumExpr>()
+//!     where
+//!         LT<E::Ret, U6>: BoolExpr<Ret = True>,
+//!     {
+//!     }
+//!
+//!     // 2 + 3 < 6
+//!     const _5_LT_6: () = _lt6::<AddExp<U2, U3>>();
+//!     // 2 * 3 !< 6
+//!     // const FAIL: () = _lt6::<MulExp<U2, U3>>();
+//! }
+//!```
+//! let's observe the compilation failure:
+//! ```compile_fail
+//! # use type_eval::{prelude::*, BoolExpr, NumExpr};
+//! # #[allow(non_upper_case_globals)]
+//! fn lt4() {
+//!     // define a function that carries a proof of evaluaton result < 6
+//!     const fn _lt6<E: NumExpr>()
+//!     where
+//!         LT<E::Ret, U6>: BoolExpr<Ret = True>,
+//!     {}
+//!
+//!     // 2 * 3 !< 6
+//!     const FAIL: () = _lt6::<MulExp<U2, U3>>();
+//! }
+//!```
+//!
+//! ## Propogate predicates/preconditions downstream via the type-system:
+//!
+//! Enforce co-veraiance of predicates when extending traits
+//! In this example, a submatrix of XS/XY dimensions wants to be contained
+//! within a "parent" matrix of X/Y dimension
+//!
+//! The top-left corner (let's call it XC/YCof the sub-matrix is constrained
+//! so it's wholely contained within the parent matrix. i.e.
+//!
+//! `XC + XS < X && YC + YS < Y`
+//!
+//!```rust
 //! use type_eval::{prelude::*, BoolExpr};
 //! // A keyboard matrix trait.
 //! trait KBMatrix
@@ -33,8 +133,9 @@
 //!     type YLoc: NumberVal;
 //! }
 //! ```
-// #![feature(trivial_bounds)]
 #![no_std]
+#![warn(clippy::pedantic)]
+#![allow(clippy::module_name_repetitions)]
 pub mod prelude {
     pub use crate::{ctrl_types::*, num_vals::*, op_types::*, val_types::*};
 }
@@ -58,6 +159,7 @@ pub mod _inners;
 pub trait NumExpr {
     type Ret: val_types::NumberVal;
 }
+#[allow(clippy::doc_markdown)]
 /// <T as [NumExpr]>::Ret helper
 pub type NumRet<T> = <T as NumExpr>::Ret;
 
@@ -65,25 +167,26 @@ pub type NumRet<T> = <T as NumExpr>::Ret;
 pub trait BoolExpr {
     type Ret: prelude::BoolVal;
 }
+#[allow(clippy::doc_markdown)]
 /// <T as [BoolExpr]>::Ret helper
 pub type BoolRet<T> = <T as BoolExpr>::Ret;
 /// An expression returning a [`prelude::BoolVal`]
 pub trait OrdExpr {
     type Ret: prelude::OrdVal;
 }
+#[allow(clippy::doc_markdown)]
 /// <T as [BoolExpr]>::Ret helper
 pub type OrdRet<T> = <T as OrdExpr>::Ret;
 
+#[allow(clippy::used_underscore_items)]
 #[cfg(test)]
 mod test_res {
-    use ctrl_types::{Eq, False, Gr8r, Less, True};
-    use val_types::B as BitString;
-    use val_types::_0;
+    use super::{
+        ctrl_types::{Eq, False, Gr8r, Less, True},
+        num_vals::*,
+        BoolExpr, NumExpr, OrdExpr,
+    };
 
-    use crate::num_vals::*;
-    use crate::val_types::_1;
-
-    use super::*;
     pub(crate) const fn _b0<E: NumExpr<Ret = U0>>() {}
     pub(crate) const fn _b1<E: NumExpr<Ret = U1>>() {}
     pub(crate) const fn _b2<E: NumExpr<Ret = U2>>() {}
@@ -101,9 +204,4 @@ mod test_res {
     pub(crate) const fn _lt<E: OrdExpr<Ret = Less>>() {}
     pub(crate) const fn _eq<E: OrdExpr<Ret = Eq>>() {}
     pub(crate) const fn _gt<E: OrdExpr<Ret = Gr8r>>() {}
-    #[test]
-    fn eval_add() {
-        const _0_0: () = _b0::<BitString<_0, _0>>();
-        const _0_1: () = _b1::<BitString<_0, _1>>();
-    }
 }

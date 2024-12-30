@@ -61,6 +61,7 @@ where
 }
 
 #[cfg(test)]
+#[allow(clippy::used_underscore_items)]
 mod test {
     use super::*;
     use crate::{

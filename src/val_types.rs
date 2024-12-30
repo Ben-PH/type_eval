@@ -1,6 +1,5 @@
 use core::marker::PhantomData;
 
-use self::B as BitString;
 use crate::{
     NumExpr,
     _inners::{_BitLit, _BitStrLit, _ExprMode, _Recurse},
@@ -24,25 +23,25 @@ impl NumberVal for _0 {}
 /// A [`NumExpr`] can output type-expressed `1`
 impl NumberVal for _1 {}
 /// A [`NumExpr`] can output type-expressed `0bxxxx`
-impl<Bs, B> NumberVal for BitString<Bs, B>
+impl<Bs, Bt> NumberVal for B<Bs, Bt>
 where
     Bs: _BitStrLit,
-    B: _BitLit,
+    Bt: _BitLit,
 {
 }
 
 /// Trims 0-leading bitstrings semi-automagically
-impl<B> NumExpr for BitString<_0, B>
+impl<Bt> NumExpr for B<_0, Bt>
 where
-    B: NumberVal,
+    Bt: NumberVal,
 {
-    type Ret = B;
+    type Ret = Bt;
 }
 
-impl<Lhs, B> NumExpr for BitString<Lhs, B>
+impl<Bs, Bt> NumExpr for B<Bs, Bt>
 where
-    Lhs: _BitStrLit,
-    B: _BitLit,
+    Bs: _BitStrLit,
+    Bt: _BitLit,
 {
     type Ret = Self;
 }
@@ -55,14 +54,15 @@ impl NumExpr for _1 {
 }
 
 #[cfg(test)]
+#[allow(clippy::used_underscore_items)]
 mod test {
     use crate::{
         test_res::*,
-        val_types::{BitString, _0, _1},
+        val_types::{B, _0, _1},
     };
     #[test]
-    fn eval_add() {
-        const _0_0: () = _b0::<BitString<_0, _0>>();
-        const _0_1: () = _b1::<BitString<_0, _1>>();
+    fn eval_trim() {
+        const _0_0: () = _b0::<B<_0, _0>>();
+        const _0_1: () = _b1::<B<_0, _1>>();
     }
 }

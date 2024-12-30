@@ -1,23 +1,22 @@
 use crate::{
     num_vals::{U0, U1},
     op_types::AddExp,
-    prelude::B as BitString,
-    val_types::{NumberVal, _0, _1},
+    val_types::{NumberVal, B, _0, _1},
     NumExpr,
     _inners::_BitStrLit,
 };
 use core::ops::Add as StAdd;
 
-pub type AddOut<L, R> = <L as StAdd<R>>::Output;
+pub type StAddRet<L, R> = <L as StAdd<R>>::Output;
 
 impl<L, R> NumExpr for AddExp<L, R>
 where
     L: NumExpr,
     R: NumExpr,
     L::Ret: StAdd<R::Ret>,
-    AddOut<L::Ret, R::Ret>: NumberVal,
+    StAddRet<L::Ret, R::Ret>: NumberVal,
 {
-    type Ret = AddOut<L::Ret, R::Ret>;
+    type Ret = StAddRet<L::Ret, R::Ret>;
 }
 
 // ----
@@ -43,7 +42,7 @@ impl StAdd<U0> for U1 {
     }
 }
 impl StAdd<U1> for U1 {
-    type Output = BitString<U1, _0>;
+    type Output = B<U1, _0>;
     fn add(self, _rhs: U1) -> Self::Output {
         unimplemented!("type eval only")
     }
@@ -52,21 +51,21 @@ impl StAdd<U1> for U1 {
 // ---
 // Non-carry bit-additions to bit-string literal
 // ---
-impl<B> StAdd<U1> for BitString<B, _0>
+impl<Bs> StAdd<U1> for B<Bs, _0>
 where
-    B: _BitStrLit,
+    Bs: _BitStrLit,
 {
-    type Output = BitString<B, _1>;
+    type Output = B<Bs, _1>;
     fn add(self, _rhs: U1) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
-impl<B> StAdd<BitString<B, _0>> for U1
+impl<Bs> StAdd<B<Bs, _0>> for U1
 where
-    B: _BitStrLit,
+    Bs: _BitStrLit,
 {
-    type Output = BitString<B, _1>;
-    fn add(self, _rhs: BitString<B, _0>) -> Self::Output {
+    type Output = B<Bs, _1>;
+    fn add(self, _rhs: B<Bs, _0>) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
@@ -74,26 +73,26 @@ where
 // ---
 // Carrying increment to a bit-string-literal
 // ---
-impl<B> StAdd<U1> for BitString<B, _1>
+impl<Bs> StAdd<U1> for B<Bs, _1>
 where
     // Recurse the carry
-    B: StAdd<U1>,
+    Bs: StAdd<U1>,
     // Ensure the carry recursion is a valid progression
-    AddOut<B, U1>: _BitStrLit,
+    StAddRet<Bs, U1>: _BitStrLit,
 {
-    type Output = BitString<AddOut<B, U1>, _0>;
+    type Output = B<StAddRet<Bs, U1>, _0>;
     fn add(self, _rhs: U1) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
 
-impl<B> StAdd<BitString<B, _1>> for U1
+impl<Bs> StAdd<B<Bs, _1>> for U1
 where
-    B: StAdd<U1>,
-    AddOut<B, U1>: _BitStrLit,
+    Bs: StAdd<U1>,
+    StAddRet<Bs, U1>: _BitStrLit,
 {
-    type Output = BitString<AddOut<B, U1>, _0>;
-    fn add(self, _rhs: BitString<B, _1>) -> Self::Output {
+    type Output = B<StAddRet<Bs, U1>, _0>;
+    fn add(self, _rhs: B<Bs, _1>) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
@@ -102,48 +101,48 @@ where
 // Addition of two bit-string literals
 // ---
 /// (LB, 0) + (RB, 0) == ((LB + RB), 0)
-impl<LB, RB> StAdd<BitString<RB, _0>> for BitString<LB, _0>
+impl<LB, RB> StAdd<B<RB, _0>> for B<LB, _0>
 where
     LB: StAdd<RB>,
-    AddOut<LB, RB>: _BitStrLit,
+    StAddRet<LB, RB>: _BitStrLit,
 {
-    type Output = BitString<AddOut<LB, RB>, _0>;
-    fn add(self, _rhs: BitString<RB, _0>) -> Self::Output {
+    type Output = B<StAddRet<LB, RB>, _0>;
+    fn add(self, _rhs: B<RB, _0>) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
 /// (LB, 0) + (RB, 1) == ((LB + RB), 1)
-impl<LB, RB> StAdd<BitString<RB, _1>> for BitString<LB, _0>
+impl<LB, RB> StAdd<B<RB, _1>> for B<LB, _0>
 where
     LB: StAdd<RB>,
-    AddOut<LB, RB>: _BitStrLit,
+    StAddRet<LB, RB>: _BitStrLit,
 {
-    type Output = BitString<AddOut<LB, RB>, _1>;
-    fn add(self, _rhs: BitString<RB, _1>) -> Self::Output {
+    type Output = B<StAddRet<LB, RB>, _1>;
+    fn add(self, _rhs: B<RB, _1>) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
-impl<LB, RB> StAdd<BitString<RB, _0>> for BitString<LB, _1>
+impl<LB, RB> StAdd<B<RB, _0>> for B<LB, _1>
 where
     LB: StAdd<RB>,
-    AddOut<LB, RB>: _BitStrLit,
+    StAddRet<LB, RB>: _BitStrLit,
 {
-    type Output = BitString<AddOut<LB, RB>, _1>;
-    fn add(self, _rhs: BitString<RB, _0>) -> Self::Output {
+    type Output = B<StAddRet<LB, RB>, _1>;
+    fn add(self, _rhs: B<RB, _0>) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
 /// (LB, 1) + (RB, 1) == ((LB + RB) + 1, 1)
-impl<LB, RB> StAdd<BitString<RB, _1>> for BitString<LB, _1>
+impl<LB, RB> StAdd<B<RB, _1>> for B<LB, _1>
 where
     LB: StAdd<RB>,
-    AddOut<LB, RB>: _BitStrLit + StAdd<U1>,
-    AddOut<AddOut<LB, RB>, U1>: _BitStrLit,
+    StAddRet<LB, RB>: _BitStrLit + StAdd<U1>,
+    StAddRet<StAddRet<LB, RB>, U1>: _BitStrLit,
     // AddExp<NumRet<NumRet<AddExp<LB, RB>>>, U1>: NumExpr,
     // NumRet<AddExp<NumRet<NumRet<AddExp<LB, RB>>>, U1>>: BitStrLit,
 {
-    type Output = BitString<AddOut<AddOut<LB, RB>, U1>, _0>;
-    fn add(self, _rhs: BitString<RB, _1>) -> Self::Output {
+    type Output = B<StAddRet<StAddRet<LB, RB>, U1>, _0>;
+    fn add(self, _rhs: B<RB, _1>) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
@@ -154,6 +153,8 @@ mod test {
         num_vals::{U0, U1, U2, U3, U4, U6, U7},
         test_res::*,
     };
+    #[allow(non_upper_case_globals)]
+    #[allow(clippy::used_underscore_items)]
     #[test]
     fn eval_add() {
         const _0_ADD_0: () = _b0::<AddExp<U0, U0>>();
