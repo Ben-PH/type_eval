@@ -2,8 +2,7 @@ use crate::{
     _inners::{_Base, _BitLit, _BitStrLit},
     num_vals::{U0, U1},
     op_types::{AddExp, MulExp},
-    prelude::B as BitString,
-    val_types::{NumberVal, _0, _1},
+    val_types::{NumberVal, B, _0, _1},
     NumExpr, NumRet,
 };
 
@@ -32,32 +31,32 @@ impl NumExpr for MulExp<U0, U0, _Base> {
 impl NumExpr for MulExp<U1, U1, _Base> {
     type Ret = U1;
 }
-impl<Bs, B> NumExpr for MulExp<U1, BitString<Bs, B>, _Base>
+impl<Bs, Bt> NumExpr for MulExp<U1, B<Bs, Bt>, _Base>
 where
     Bs: NumExpr,
-    B: _BitLit,
-    BitString<Bs, B>: NumberVal,
+    Bt: _BitLit,
+    B<Bs, Bt>: NumberVal,
 {
-    type Ret = BitString<Bs, B>;
+    type Ret = B<Bs, Bt>;
 }
 
 // (LB, U1) * Val == ((LB * Val), U0) + Val
-impl<LB, Val> NumExpr for MulExp<BitString<LB, _1>, Val, _Base>
+impl<LB, Val> NumExpr for MulExp<B<LB, _1>, Val, _Base>
 where
     LB: _BitStrLit,
     MulExp<LB, Val>: NumExpr,
-    AddExp<BitString<NumRet<MulExp<LB, Val>>, _0>, Val>: NumExpr,
+    AddExp<B<NumRet<MulExp<LB, Val>>, _0>, Val>: NumExpr,
 {
-    type Ret = NumRet<AddExp<BitString<NumRet<MulExp<LB, Val>>, _0>, Val>>;
+    type Ret = NumRet<AddExp<B<NumRet<MulExp<LB, Val>>, _0>, Val>>;
 }
 // (LB, U0) * Val == ((LB * Val), U0)
-impl<LB, Val> NumExpr for MulExp<BitString<LB, _0>, Val, _Base>
+impl<LB, Val> NumExpr for MulExp<B<LB, _0>, Val, _Base>
 where
     LB: _BitStrLit,
     MulExp<LB, Val>: NumExpr,
     NumRet<MulExp<LB, Val>>: _BitStrLit,
 {
-    type Ret = BitString<NumRet<MulExp<LB, Val>>, _0>;
+    type Ret = B<NumRet<MulExp<LB, Val>>, _0>;
 }
 
 #[cfg(test)]
@@ -67,8 +66,10 @@ mod test {
         num_vals::{U1, U2, U3, U4, U5, U6, U7, U8},
         test_res::*,
     };
+    #[allow(clippy::used_underscore_items)]
+    #[allow(non_upper_case_globals)]
     #[test]
-    fn eval_add() {
+    fn eval_mul() {
         const _0_MUL_0: () = _b0::<MulExp<U0, U0>>();
         const _0_MUL_1: () = _b0::<MulExp<U0, U1>>();
         const _1_MUL_0: () = _b0::<MulExp<U1, U0>>();

@@ -21,6 +21,7 @@ where
     type Ret = BoolRet<LT<L, NumRet<AddExp<R, U1>>>>;
 }
 #[cfg(test)]
+#[allow(clippy::used_underscore_items)]
 mod test {
     use super::*;
     use crate::{

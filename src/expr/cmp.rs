@@ -5,6 +5,8 @@ mod lt;
 mod ltegte;
 mod ord;
 
+#[allow(non_upper_case_globals)]
+#[allow(clippy::used_underscore_items)]
 #[cfg(test)]
 mod test {
     use crate::ctrl_types::{False, True, AND, GT, LT, OR};

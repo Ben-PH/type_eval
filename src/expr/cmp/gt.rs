@@ -115,6 +115,7 @@ mod test {
         test_res::*,
     };
     #[test]
+    #[allow(clippy::used_underscore_items)]
     fn eval_gt() {
         const _0_GT_0: () = _f::<GT<U0, U0>>();
         const _1_GT_0: () = _t::<GT<U1, U0>>();
