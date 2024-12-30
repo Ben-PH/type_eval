@@ -105,7 +105,7 @@ mod test {
         const _1_DIV_2: () = _b0::<DivExp<U1, U2>>();
         const _3_DIV_1: () = _b3::<DivExp<U3, U1>>();
         const _1_DIV_3: () = _b0::<DivExp<U1, U3>>();
-        const _2_DIV_2: () = _b1::<DivExp<U2, U2, _0>>();
+        const _2_DIV_2: () = _b1::<DivExp<U2, U2>>();
         const _4_DIV_1: () = _b4::<DivExp<U4, U1>>();
         const _5_DIV_1: () = _b5::<DivExp<U5, U1>>();
         const _5_DIV_2: () = _b2::<DivExp<U5, U2>>();
