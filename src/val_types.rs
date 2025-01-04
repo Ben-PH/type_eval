@@ -5,7 +5,7 @@ use crate::{
     _inners::{_BitLit, _BitStrLit, _ExprMode, _Recurse},
 };
 
-pub trait NumberVal {}
+pub trait NumberVal: NumExpr {}
 pub trait NonZero: NumberVal {}
 
 /// Literal representation of the 0-bit

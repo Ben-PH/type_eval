@@ -31,6 +31,7 @@ impl BoolExpr for GT<_1, _1, _Base> {
 impl<LBs, LB, RBs, RB> BoolExpr for GT<B<LBs, LB>, B<RBs, RB>, _Base>
 where
     GT<LB, RB, _Base>: BoolExpr,
+    BoolRet<GT<LB, RB, _Base>>: BoolVal,
     _BitwiseGT<BoolRet<GT<LB, RB, _Base>>, LBs, RBs>: BoolExpr,
 {
     type Ret = BoolRet<_BitwiseGT<BoolRet<GT<LB, RB, _Base>>, LBs, RBs>>;

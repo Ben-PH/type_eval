@@ -187,17 +187,18 @@ pub trait MemRep {
     const MU16: u16 = Self::MU128 as u16;
     const MU8: u8 = Self::MU128 as u8;
 }
-/// An expression returning a [`prelude::NumberVal`]
+
+/// The body of a scope. Often resolving to a [`NumberVal`]
 pub trait NumExpr {
-    type Ret: val_types::NumberVal;
+    type Ret: NumExpr;
 }
 #[allow(clippy::doc_markdown)]
 /// <T as [NumExpr]>::Ret helper
 pub type NumRet<T> = <T as NumExpr>::Ret;
 
-/// An expression returning a [`prelude::BoolVal`]
+/// The body of a scope. Often resolving to a [`BoolVal`]
 pub trait BoolExpr {
-    type Ret: prelude::BoolVal;
+    type Ret: BoolExpr;
 }
 #[allow(clippy::doc_markdown)]
 /// <T as [BoolExpr]>::Ret helper

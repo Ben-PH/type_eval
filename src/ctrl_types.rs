@@ -5,7 +5,7 @@ use crate::{
     _inners::{_ExprMode, _Recurse},
 };
 
-pub trait BoolVal {}
+pub trait BoolVal: BoolExpr {}
 
 pub struct True;
 impl BoolVal for True {}

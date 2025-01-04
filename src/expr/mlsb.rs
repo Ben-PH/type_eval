@@ -12,6 +12,7 @@ use crate::{
 impl<BS> NumExpr for MSB<BS>
 where
     BS: NumExpr,
+    BS::Ret: NumberVal,
     MSBCount<U0, BS::Ret>: NumExpr,
 {
     type Ret = NumRet<MSBCount<U0, BS::Ret>>;
@@ -42,7 +43,9 @@ where
     BS: NumberVal + _BitStrLit,
     B: _BitLit,
     AddExp<Idx, U1>: NumExpr,
+    NumRet<AddExp<Idx, U1>>: NumberVal,
     MSBCount<NumRet<AddExp<Idx, U1>>, BS>: NumExpr,
+    NumRet<MSBCount<NumRet<AddExp<Idx, U1>>, BS>>: NumberVal,
 {
     type Ret = NumRet<MSBCount<NumRet<AddExp<Idx, U1>>, BS>>;
 }
@@ -50,6 +53,7 @@ where
 impl<BS> NumExpr for LSB<BS>
 where
     BS: NumExpr,
+    BS::Ret: NumberVal,
     LSBCount<U0, BS::Ret>: NumExpr,
 {
     type Ret = NumRet<LSBCount<U0, BS::Ret>>;
@@ -79,6 +83,7 @@ where
     Idx: NumberVal,
     BS: NumberVal + _BitStrLit,
     AddExp<Idx, U1>: NumExpr,
+    NumRet<AddExp<Idx, U1>>: NumberVal,
     LSBCount<NumRet<AddExp<Idx, U1>>, BS>: NumExpr,
 {
     type Ret = NumRet<LSBCount<NumRet<AddExp<Idx, U1>>, BS>>;
