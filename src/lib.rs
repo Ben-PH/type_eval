@@ -100,7 +100,7 @@
 //! }
 //!```
 //!
-//! ## Propogate predicates/preconditions downstream via the type-system:
+//! ## (Advanced) Propogate predicates/preconditions downstream via the type-system:
 //!
 //! Enforce co-veraiance of predicates when extending traits
 //! In this example, a submatrix of XS/XY dimensions wants to be contained
@@ -116,9 +116,9 @@
 //! // A keyboard matrix trait.
 //! trait KBMatrix
 //! // TODO: impl non-zero
-//! // where
-//! //     GTE<Self::Width, U1>: BoolExpr<Ret = True>,
-//! //     GTE<Self::Height, U1>: BoolExpr<Ret = True>,
+//! where
+//!      Self::Width: NonZero,
+//!      Self::Height: NonZero,
 //! {
 //!     type Width: NumberVal;
 //!     type Height: NumberVal;
@@ -132,8 +132,8 @@
 //! // if it's not contained within the parent matrix
 //! trait SubMatrix
 //! where
-//!     GTE<Self::Width, U1>: BoolExpr<Ret = True>,
-//!     GTE<Self::Height, U1>: BoolExpr<Ret = True>,
+//!     Self::Width: NonZero,
+//!     Self::Height: NonZero,
 //!     // this is effectively `assert!(x + width <= parent.width)`, but in the type system
 //!     LTE<AddExp<Self::Width, Self::XLoc>, ParentWidth<Self>>: BoolExpr<Ret = True>,
 //!     // this is effectively `assert!(y + height <= parent.height)`, but in the type system
@@ -149,6 +149,7 @@
 #![no_std]
 #![warn(clippy::pedantic)]
 #![allow(clippy::module_name_repetitions)]
+#![feature(never_type)]
 pub mod prelude {
     pub use crate::{ctrl_types::*, num_vals::*, op_types::*, val_types::*};
 }
