@@ -70,59 +70,59 @@ where
     }
 }
 /// (L)0 - (R)0 = (L - R)0
-impl<LB, RB> StSub<B<RB, _0>> for B<LB, _0>
+impl<LBH, RBH> StSub<B<RBH, _0>> for B<LBH, _0>
 where
     // `L - R` is valid
-    LB: StSub<RB>,
+    LBH: StSub<RBH>,
     // `(L - R)0` is valid as a bitstring
-    B<SubOut<LB, RB>, _0>: NumExpr,
+    B<SubOut<LBH, RBH>, _0>: NumExpr,
 {
-    type Output = NumRet<B<SubOut<LB, RB>, _0>>;
-    fn sub(self, _rhs: B<RB, _0>) -> Self::Output {
+    type Output = NumRet<B<SubOut<LBH, RBH>, _0>>;
+    fn sub(self, _rhs: B<RBH, _0>) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
 /// (L)0 - (R)1 = ((L - R) - 1)1
-impl<LB, RB> StSub<B<RB, _1>> for B<LB, _0>
+impl<LBH, RBH> StSub<B<RBH, _1>> for B<LBH, _0>
 where
     // `L - R` is valid
-    LB: StSub<RB>,
+    LBH: StSub<RBH>,
     // `(L - R) - 1` is a valid expression
-    SubOut<LB, RB>: StSub<_1>,
+    SubOut<LBH, RBH>: StSub<_1>,
     // `(L - R) - 1` Is a valid bit-string literal so can be appended with a bit to make a valid
     // number
-    B<SubOut<SubOut<LB, RB>, _1>, _1>: NumExpr,
+    B<SubOut<SubOut<LBH, RBH>, _1>, _1>: NumExpr,
 {
-    type Output = NumRet<B<SubOut<SubOut<LB, RB>, _1>, _1>>;
-    fn sub(self, _rhs: B<RB, _1>) -> Self::Output {
+    type Output = NumRet<B<SubOut<SubOut<LBH, RBH>, _1>, _1>>;
+    fn sub(self, _rhs: B<RBH, _1>) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
 /// (L)1 - (R)0 = (L - R)1
-impl<LB, RB> StSub<B<RB, _0>> for B<LB, _1>
+impl<LBH, RBH> StSub<B<RBH, _0>> for B<LBH, _1>
 where
     // `L - R` is valid
-    LB: StSub<RB>,
-    B<SubOut<LB, RB>, _1>: NumExpr,
+    LBH: StSub<RBH>,
+    B<SubOut<LBH, RBH>, _1>: NumExpr,
     // `(L - R)1` is valid as a bitstring
     // B<NumRet<SubExp<LB, RB>>, _1>: NumExpr,
 {
-    type Output = NumRet<B<SubOut<LB, RB>, _1>>;
-    fn sub(self, _rhs: B<RB, _0>) -> Self::Output {
+    type Output = NumRet<B<SubOut<LBH, RBH>, _1>>;
+    fn sub(self, _rhs: B<RBH, _0>) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
 
 /// (L)1 - (R)1 = (L - R)0
-impl<LB, RB> StSub<B<RB, _1>> for B<LB, _1>
+impl<LBH, RBH> StSub<B<RBH, _1>> for B<LBH, _1>
 where
     // `L - R` is valid
-    LB: StSub<RB>,
+    LBH: StSub<RBH>,
     // `(L - R)0` is valid as a bitstring
-    B<SubOut<LB, RB>, _0>: NumExpr,
+    B<SubOut<LBH, RBH>, _0>: NumExpr,
 {
-    type Output = NumRet<B<SubOut<LB, RB>, _0>>;
-    fn sub(self, _rhs: B<RB, _1>) -> Self::Output {
+    type Output = NumRet<B<SubOut<LBH, RBH>, _0>>;
+    fn sub(self, _rhs: B<RBH, _1>) -> Self::Output {
         unimplemented!("type eval only")
     }
 }
