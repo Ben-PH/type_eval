@@ -5,16 +5,15 @@ use crate::{
     ctrl_types::{False, True, GT},
     prelude::BoolVal,
     val_types::{B, _0, _1},
-    BoolExpr, BoolRet, NumExpr,
+    BoolExpr, BoolRet,
 };
 
 impl<L, R> BoolExpr for GT<L, R>
 where
-    L: NumExpr,
-    R: NumExpr,
-    GT<L::Ret, R::Ret, _Base>: BoolExpr,
+    GT<L, R, _Base>: BoolExpr,
+    BoolRet<GT<L, R, _Base>>: BoolVal,
 {
-    type Ret = BoolRet<GT<L::Ret, R::Ret, _Base>>;
+    type Ret = BoolRet<GT<L, R, _Base>>;
 }
 impl BoolExpr for GT<_1, _0, _Base> {
     type Ret = True;
