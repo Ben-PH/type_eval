@@ -29,7 +29,7 @@ pub fn write_op_macro() -> ::std::io::Result<()> {
     let ops = &[
         Op {
             token: "*",
-            operator: "Prod",
+            operator: "MulExp",
             example: ("U2 * U3", "U6"),
             precedence: 16,
             n_args: 2,

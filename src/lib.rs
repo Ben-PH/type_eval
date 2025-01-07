@@ -5,7 +5,7 @@
 //! ### Erase requirement of machine representation:
 //!
 //! ```rust
-//! # use type_eval::{prelude::*, BoolExpr, NumExpr};
+//! # use type_eval::{prelude::*, BoolExpr, NumExpr, op};
 //! #[deprecated(note="use `NumRet::<DivExpr>::$TYPE` instead")]
 //! use core::ops::Div;
 //! use core::cmp::Eq;
@@ -20,15 +20,15 @@
 //! use type_eval::{NumRet, MemRep};
 //! fn main() {
 //!     // let safe_dived = safe_div(4u16, 2usize);
-//!     let safe_dived = NumRet::<DivExp<U4, U2>>::MU32;
+//!     let safe_dived = NumRet::<op!(U4 / U2)>::MU32;
 //! }
 //! ```
 //!
 //! ### Calculated array length
 //!
 //!```
-//! use type_eval::{num_vals::*, prelude::*, NumRet, MemRep};
-//! type Area<Width, Height> = NumRet::<MulExp<Width, Height>>;
+//! use type_eval::{num_vals::*, prelude::*, NumRet, MemRep, op};
+//! type Area<Width, Height> = NumRet::<op!(Width * Height)>;
 //! fn area_array<const S: usize>(array: [u8; S])
 //! { }
 //!
@@ -40,7 +40,7 @@
 //! ### Enforce predicates/preconditions into the type-system:
 //!
 //!```
-//! # use type_eval::{prelude::*, BoolExpr, NumExpr};
+//! # use type_eval::{prelude::*, BoolExpr, NumExpr, op};
 //!
 //! // define functions that carry a proof of evaluation result
 //! const fn _b0<E: NumExpr<Ret = U0>>() {}
@@ -49,15 +49,15 @@
 //! const fn _b3<E: NumExpr<Ret = U3>>() {}
 //! #[allow(non_upper_case_globals)]
 //! fn add_sub() {
-//!     const _2_ADD_1__SUB_3: () = _b0::<SubExp<AddExp<U2, U1>, U3>>();
-//!     const _6_SUB__1_ADD_3: () = _b2::<SubExp<U6, AddExp<U1, U3>>>();
-//!     // const COMPILE_FAIL: () = _b2::<SubExp<U7, AddExp<U1, U3>>>();
+//!     const _2_ADD_1__SUB_3: () = _b0::<op!((U2 + U1) - U3)>();
+//!     const _6_SUB__1_ADD_3: () = _b2::<op!(U6 - (U1 + U3))>();
+//!     // const COMPILE_FAIL: () = _b2::<op!(U7 - (U1 + U3))>();
 //!
 //! }
 //!
 //! fn shift_msb() {
-//!     const _MSB__2_SHL_1: () = _b2::<MSB<ShLExp<U2, U1>>>();
-//!     const _MSB__2_SHL_0: () = _b1::<MSB<ShLExp<U2, U0>>>();
+//!     const _MSB__2_SHL_1: () = _b2::<MSB<op!(U2 << U1)>>();
+//!     const _MSB__2_SHL_0: () = _b1::<MSB<op!(U2 << U0)>>();
 //!
 //!     const _MSB_4__SUB__MSB_3: () = _b1::<SubExp<MSB<U4>, MSB<U3>>>();
 //!     const _MSB_4__ADD__MSB_3: () = _b3::<AddExp<MSB<U4>, MSB<U3>>>();
@@ -112,7 +112,7 @@
 //! `XC + XS < X && YC + YS < Y`
 //!
 //!```rust
-//! use type_eval::{prelude::*, BoolExpr};
+//! use type_eval::{prelude::*, BoolExpr, op};
 //! // A keyboard matrix trait.
 //! trait KBMatrix
 //! // TODO: impl non-zero
