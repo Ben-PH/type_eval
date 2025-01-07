@@ -1,5 +1,5 @@
 use crate::{
-    prelude::{False, ModExp, SubExp, True, B, LT, _0, _1},
+    prelude::{BoolVal, False, ModExp, SubExp, True, B, LT, _0, _1},
     BoolExpr, BoolRet, NumExpr, NumRet,
 };
 
@@ -8,9 +8,10 @@ where
     N: NumExpr,
     D: NumExpr,
     LT<N::Ret, D::Ret>: BoolExpr,
-    ModExp<N, D, BoolRet<LT<N::Ret, D::Ret>>>: NumExpr,
+    BoolRet<LT<N::Ret, D::Ret>>: BoolVal,
+    ModExp<N::Ret, D::Ret, BoolRet<LT<N::Ret, D::Ret>>>: NumExpr,
 {
-    type Ret = NumRet<ModExp<N, D, BoolRet<LT<N::Ret, D::Ret>>>>;
+    type Ret = NumRet<ModExp<N::Ret, D::Ret, BoolRet<LT<N::Ret, D::Ret>>>>;
 }
 impl<N, Lt> NumExpr for ModExp<N, _1, Lt>
 where
@@ -49,6 +50,7 @@ mod test {
     use super::*;
     use crate::{
         num_vals::{U0, U1, U2, U3, U4, U5, U6, U7, U8},
+        op_types::AddExp,
         test_res::*,
     };
     #[test]
@@ -57,6 +59,7 @@ mod test {
         const _2_MOD_1: () = _b0::<ModExp<U2, U1>>();
         const _1_MOD_2: () = _b1::<ModExp<U1, U2>>();
         const _3_MOD_1: () = _b0::<ModExp<U3, U1>>();
+        const _3_MOD_2: () = _b1::<ModExp<U3, U2>>();
         const _1_MOD_3: () = _b1::<ModExp<U1, U3>>();
         const _4_MOD_1: () = _b0::<ModExp<U4, U1>>();
         const _5_MOD_1: () = _b0::<ModExp<U5, U1>>();
@@ -67,7 +70,14 @@ mod test {
         const _7_MOD_5: () = _b2::<ModExp<U7, U5>>();
         const _8_MOD_1: () = _b0::<ModExp<U8, U1>>();
         const _8_MOD_2: () = _b0::<ModExp<U8, U2>>();
-        const _8_MOD_3: () = _b2::<ModExp<U8, U3>>();
+        const _8_MOD_5: () = _b3::<ModExp<U8, U5>>();
         const _3_MOD_3: () = _b0::<ModExp<U3, U3>>();
+    }
+
+    #[test]
+    fn eval_mod_nested() {
+        const _8MOD5_MOD_2: () = _b1::<ModExp<ModExp<U8, U5>, AddExp<U1, U1>>>();
+        const _8_LT_2: () = _f::<LT<ModExp<U8, U5>, AddExp<U1, U1>>>();
+        const _8S5: () = _b3::<ModExp<SubExp<U8, U5>, U5, BoolRet<LT<SubExp<U8, U5>, U5>>>>();
     }
 }

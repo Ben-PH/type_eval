@@ -11,9 +11,11 @@ use crate::{
 
 impl<N, D> NumExpr for DivExp<N, D>
 where
-    DivExp<N, D, _Base>: NumExpr,
+    N: NumExpr,
+    D: NumExpr,
+    DivExp<N::Ret, D::Ret, _Base>: NumExpr,
 {
-    type Ret = NumRet<DivExp<N, D, _Base>>;
+    type Ret = NumRet<DivExp<N::Ret, D::Ret, _Base>>;
 }
 
 impl<N> NumExpr for DivExp<N, _1, _Base>
@@ -117,5 +119,9 @@ mod test {
         const _8_DIV_1: () = _b8::<DivExp<U8, U1>>();
         const _8_DIV_3: () = _b2::<DivExp<U8, U3>>();
         const _3_DIV_3: () = _b1::<DivExp<U3, U3>>();
+    }
+    #[test]
+    fn eval_div_nested() {
+        const _5ADD3_DIV_3: () = _b2::<DivExp<AddExp<U5, U3>, U3>>();
     }
 }

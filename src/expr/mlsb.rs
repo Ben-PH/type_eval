@@ -96,14 +96,14 @@ where
 }
 #[cfg(test)]
 #[allow(clippy::used_underscore_items)]
+#[allow(non_upper_case_globals)]
 mod test {
     use super::*;
     use crate::{
-        num_vals::{U2, U3},
+        num_vals::{U2, U3, U5, U6},
         op_types::LSB,
         test_res::*,
     };
-    #[allow(non_upper_case_globals)]
     #[test]
     fn eval_msb() {
         const ___0: () = _b0::<MSB<_0>>();
@@ -114,10 +114,11 @@ mod test {
         const __11: () = _b1::<MSB<B<_1, _1>>>();
         const _100: () = _b2::<MSB<B<B<_1, _0>, _0>>>();
         const _101: () = _b2::<MSB<B<B<_1, _0>, _1>>>();
+        const _3ADD2: () = _b2::<MSB<AddExp<U3, U2>>>();
         const _110: () = _b2::<MSB<B<B<_1, _1>, _0>>>();
         const _111: () = _b2::<MSB<B<B<_1, _1>, _1>>>();
     }
-    #[allow(non_upper_case_globals)]
+
     #[test]
     fn eval_lsb() {
         const ___0: () = _b0::<LSB<_0>>();
@@ -126,10 +127,15 @@ mod test {
         const __11: () = _b0::<LSB<B<_1, _1>>>();
         const _111: () = _b0::<LSB<B<B<_1, _1>, _1>>>();
         const _101: () = _b0::<LSB<B<B<_1, _0>, _1>>>();
+        const _3ADD2: () = _b0::<LSB<AddExp<U3, U2>>>();
         const _110: () = _b1::<LSB<B<B<_1, _1>, _0>>>();
         const _100: () = _b2::<LSB<B<B<_1, _0>, _0>>>();
         const _1000: () = _b1::<LSB<B<B<B<_1, _0>, _1>, _0>>>();
         const _1100: () = _b2::<LSB<B<B<B<_1, _1>, _0>, _0>>>();
         const _1010: () = _b1::<LSB<B<B<B<_1, _0>, _1>, _0>>>();
+    }
+    #[test]
+    fn eval_mlsb_nested() {
+        const _MSB5_ADD_LSB6: () = _b1::<MSB<AddExp<MSB<U5>, LSB<U6>>>>();
     }
 }

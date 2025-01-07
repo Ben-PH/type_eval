@@ -2,14 +2,19 @@ use crate::{
     _inners::_Base,
     op_types::GcdExp,
     prelude::{ModExp, B, _0, _1},
+    val_types::NumberVal,
     NumExpr, NumRet,
 };
 
 impl<N, D> NumExpr for GcdExp<N, D>
 where
-    GcdExp<N, D, _Base>: NumExpr,
+    N: NumExpr,
+    D: NumExpr,
+    NumRet<N>: NumberVal,
+    NumRet<D>: NumberVal,
+    GcdExp<N::Ret, D::Ret, _Base>: NumExpr,
 {
-    type Ret = NumRet<GcdExp<N, D, _Base>>;
+    type Ret = NumRet<GcdExp<N::Ret, D::Ret, _Base>>;
 }
 
 impl<N> NumExpr for GcdExp<N, _1, _Base>
@@ -22,12 +27,11 @@ impl<N> NumExpr for GcdExp<N, _0, _Base>
 where
     N: NumExpr,
 {
-    type Ret = N::Ret;
+    type Ret = N;
 }
 impl<N, DBs, DB> NumExpr for GcdExp<N, B<DBs, DB>, _Base>
 where
     ModExp<N, B<DBs, DB>>: NumExpr,
-    N: NumExpr,
     GcdExp<B<DBs, DB>, NumRet<ModExp<N, B<DBs, DB>>>, _Base>: NumExpr,
 {
     type Ret = NumRet<GcdExp<B<DBs, DB>, NumRet<ModExp<N, B<DBs, DB>>>, _Base>>;
@@ -38,6 +42,7 @@ mod test {
     use super::*;
     use crate::{
         num_vals::{U0, U1, U2, U3, U4, U5, U6, U7, U8},
+        prelude::{AddExp, SubExp},
         test_res::*,
     };
     #[test]
@@ -58,5 +63,9 @@ mod test {
         const _8_GCD_2: () = _b2::<GcdExp<U8, U2>>();
         const _8_GCD_3: () = _b1::<GcdExp<U8, U3>>();
         const _3_GCD_3: () = _b3::<GcdExp<U3, U3>>();
+    }
+    #[test]
+    fn eval_gcd_nested() {
+        const _5ADD3_GCD_4SUB1: () = _b1::<GcdExp<AddExp<U5, U3>, SubExp<U4, U1>>>();
     }
 }
