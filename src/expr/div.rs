@@ -2,6 +2,7 @@ use core::marker::PhantomData;
 
 use crate::{
     _inners::{_Base, _Recurse},
+    num_vals::{U2, U3},
     op_types::DivExp,
     prelude::{AddExp, SubExp, B, IF, LT, _0, _1},
     val_types::NumberVal,
@@ -10,58 +11,60 @@ use crate::{
 
 impl<N, D> NumExpr for DivExp<N, D>
 where
-    DivExp<N, D, _Base>: NumExpr,
+    N: NumExpr,
+    D: NumExpr,
+    DivExp<N::Ret, D::Ret, _Base>: NumExpr,
 {
-    type Ret = NumRet<DivExp<N, D, _Base>>;
+    type Ret = NumRet<DivExp<N::Ret, D::Ret, _Base>>;
 }
 
 impl<N> NumExpr for DivExp<N, _1, _Base>
 where
-    N: NumberVal,
+    N: NumExpr,
 {
     type Ret = N;
 }
-impl<DBs, DB> NumExpr for DivExp<_1, B<DBs, DB>, _Base>
-where
-    B<DBs, DB>: NumberVal,
-{
+impl<DBs, DB> NumExpr for DivExp<_1, B<DBs, DB>, _Base> {
     type Ret = _0;
 }
-impl<DBs, DB> NumExpr for DivExp<_0, B<DBs, DB>, _Base>
-where
-    B<DBs, DB>: NumberVal,
-{
+impl<DBs, DB> NumExpr for DivExp<_0, B<DBs, DB>, _Base> {
     type Ret = _0;
 }
 impl<NBs, NB, DBs, DB> NumExpr for DivExp<B<NBs, NB>, B<DBs, DB>, _Base>
 where
-    B<NBs, NB>: NumberVal,
-    B<DBs, DB>: NumberVal,
+    B<NBs, NB>: NumExpr,
+    B<DBs, DB>: NumExpr,
     DivExp<B<NBs, NB>, B<DBs, DB>, _0>: NumExpr,
 {
     type Ret = NumRet<DivExp<B<NBs, NB>, B<DBs, DB>, _0>>;
 }
 impl<DBs, DB, Acc> NumExpr for DivExp<_1, B<DBs, DB>, Acc>
 where
-    Acc: NumExpr,
-    Acc::Ret: NumberVal,
+    Acc: NumberVal,
     B<DBs, DB>: NumberVal,
 {
     type Ret = Acc::Ret;
 }
 impl<DBs, DB, Acc> NumExpr for DivExp<_0, B<DBs, DB>, Acc>
 where
-    Acc: NumExpr,
-    Acc::Ret: NumberVal,
+    Acc: NumberVal,
     B<DBs, DB>: NumberVal,
 {
     type Ret = Acc::Ret;
 }
 
+// NOTE: when U2 - U3 is implemented, this might now be a redundant impl
+impl<Acc> NumExpr for DivExp<U2, U3, Acc>
+where
+    Acc: NumberVal,
+{
+    type Ret = Acc;
+}
 impl<NBs, NB, DBs, DB, Acc> NumExpr for DivExp<B<NBs, NB>, B<DBs, DB>, Acc>
 where
-    Acc: NumExpr,
-    AddExp<Acc::Ret, _1>: NumExpr,
+    Acc: NumberVal,
+    AddExp<Acc, _1>: NumExpr,
+    NumRet<AddExp<Acc, _1>>: NumExpr,
     B<NBs, NB>: NumExpr,
     B<DBs, DB>: NumExpr,
     NumRet<B<NBs, NB>>: NumberVal,
@@ -71,14 +74,14 @@ where
     IF<
         LT<B<NBs, NB>, B<DBs, DB>>,
         Acc,
-        DivExp<NumRet<SubExp<B<NBs, NB>, B<DBs, DB>>>, B<DBs, DB>, AddExp<Acc::Ret, _1>>,
+        DivExp<NumRet<SubExp<B<NBs, NB>, B<DBs, DB>>>, B<DBs, DB>, NumRet<AddExp<Acc, _1>>>,
     >: NumExpr,
 {
     type Ret = NumRet<
         IF<
             LT<B<NBs, NB>, B<DBs, DB>>,
             Acc,
-            DivExp<NumRet<SubExp<B<NBs, NB>, B<DBs, DB>>>, B<DBs, DB>, AddExp<Acc::Ret, _1>>,
+            DivExp<NumRet<SubExp<B<NBs, NB>, B<DBs, DB>>>, B<DBs, DB>, NumRet<AddExp<Acc, _1>>>,
         >,
     >;
 }
@@ -102,8 +105,10 @@ mod test {
     fn eval_div() {
         const _0_DIV_1: () = _b0::<DivExp<U0, U1>>();
         const _2_DIV_1: () = _b2::<DivExp<U2, U1>>();
+        const _2_DIV_3: () = _b0::<DivExp<U2, U3>>();
         const _1_DIV_2: () = _b0::<DivExp<U1, U2>>();
         const _3_DIV_1: () = _b3::<DivExp<U3, U1>>();
+        const _3_DIV_2: () = _b1::<DivExp<U3, U2>>();
         const _1_DIV_3: () = _b0::<DivExp<U1, U3>>();
         const _2_DIV_2: () = _b1::<DivExp<U2, U2>>();
         const _4_DIV_1: () = _b4::<DivExp<U4, U1>>();
@@ -112,6 +117,11 @@ mod test {
         const _6_DIV_1: () = _b6::<DivExp<U6, U1>>();
         const _7_DIV_1: () = _b7::<DivExp<U7, U1>>();
         const _8_DIV_1: () = _b8::<DivExp<U8, U1>>();
+        const _8_DIV_3: () = _b2::<DivExp<U8, U3>>();
         const _3_DIV_3: () = _b1::<DivExp<U3, U3>>();
+    }
+    #[test]
+    fn eval_div_nested() {
+        const _5ADD3_DIV_3: () = _b2::<DivExp<AddExp<U5, U3>, U3>>();
     }
 }

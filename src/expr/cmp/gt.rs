@@ -31,6 +31,7 @@ impl BoolExpr for GT<_1, _1, _Base> {
 impl<LBs, LB, RBs, RB> BoolExpr for GT<B<LBs, LB>, B<RBs, RB>, _Base>
 where
     GT<LB, RB, _Base>: BoolExpr,
+    BoolRet<GT<LB, RB, _Base>>: BoolVal,
     _BitwiseGT<BoolRet<GT<LB, RB, _Base>>, LBs, RBs>: BoolExpr,
 {
     type Ret = BoolRet<_BitwiseGT<BoolRet<GT<LB, RB, _Base>>, LBs, RBs>>;
@@ -108,14 +109,16 @@ where
     type Ret = BoolRet<_BitwiseGT<True, LBs, RBs>>;
 }
 #[cfg(test)]
+#[allow(clippy::used_underscore_items)]
 mod test {
     use super::*;
     use crate::{
+        ctrl_types::{False, AND, OR},
         num_vals::{U0, U1, U2, U3, U4, U5, U6, U7},
+        prelude::{AddExp, SubExp},
         test_res::*,
     };
     #[test]
-    #[allow(clippy::used_underscore_items)]
     fn eval_gt() {
         const _0_GT_0: () = _f::<GT<U0, U0>>();
         const _1_GT_0: () = _t::<GT<U1, U0>>();
@@ -134,5 +137,14 @@ mod test {
         const _3_GT_3: () = _f::<GT<U3, U3>>();
         const _6_GT_1: () = _t::<GT<U6, U1>>();
         const _7_GT_1: () = _t::<GT<U7, U1>>();
+    }
+    #[test]
+    fn eval_gt_nested() {
+        const _3_ADD_1_GT_1ADD1: () = _t::<GT<AddExp<U3, U1>, AddExp<U1, U1>>>();
+        const _3_ADD_1_GT_1_AND_F: () = _f::<AND<GT<AddExp<U3, U1>, U1>, False>>();
+        const _F_AND_TORF: () = _f::<AND<False, OR<True, False>>>();
+        const _F_OR_TORF: () = _t::<OR<False, OR<True, False>>>();
+        const _5ADD3_GT_4_SUB_1: () = _t::<GT<AddExp<U5, U3>, SubExp<U4, U1>>>();
+        const _5ADD3_GT_3_SUB_1: () = _t::<GT<AddExp<U5, U3>, SubExp<U3, U1>>>();
     }
 }

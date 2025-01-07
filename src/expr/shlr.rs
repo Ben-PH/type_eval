@@ -2,8 +2,8 @@ use crate::{
     _inners::{_Base, _BitStrLit},
     num_vals::U1,
     op_types::{ShLExp, ShRExp, SubExp},
-    prelude::B as BitString,
-    val_types::{NumberVal, _0, _1},
+    prelude::B,
+    val_types::{_0, _1},
     NumExpr, NumRet,
 };
 
@@ -16,19 +16,19 @@ where
     type Ret = NumRet<ShLExp<L::Ret, R::Ret, _Base>>;
 }
 
-impl<B> NumExpr for ShLExp<B, _0, _Base>
+impl<BS> NumExpr for ShLExp<BS, _0, _Base>
 where
-    B: NumberVal,
+    BS: NumExpr,
 {
-    type Ret = B;
+    type Ret = BS;
 }
-impl<B, N> NumExpr for ShLExp<B, N, _Base>
+impl<BS, N> NumExpr for ShLExp<BS, N, _Base>
 where
-    B: _BitStrLit,
+    BS: _BitStrLit,
     SubExp<N, _1>: NumExpr,
-    ShLExp<BitString<B, _0>, NumRet<SubExp<N, _1>>>: NumExpr,
+    ShLExp<B<BS, _0>, NumRet<SubExp<N, _1>>>: NumExpr,
 {
-    type Ret = NumRet<ShLExp<BitString<B, _0>, NumRet<SubExp<N, _1>>>>;
+    type Ret = NumRet<ShLExp<B<BS, _0>, NumRet<SubExp<N, _1>>>>;
 }
 impl<L, R> NumExpr for ShRExp<L, R>
 where
@@ -39,19 +39,19 @@ where
     type Ret = NumRet<ShRExp<L::Ret, R::Ret, _Base>>;
 }
 
-impl<B> NumExpr for ShRExp<B, _0, _Base>
+impl<BS> NumExpr for ShRExp<BS, _0, _Base>
 where
-    B: NumberVal,
+    BS: NumExpr,
 {
-    type Ret = B;
+    type Ret = BS;
 }
-impl<Bs, B, N> NumExpr for ShRExp<BitString<Bs, B>, N, _Base>
+impl<BH, BT, N> NumExpr for ShRExp<B<BH, BT>, N, _Base>
 where
-    Bs: NumExpr,
+    BH: NumExpr,
     SubExp<N, _1>: NumExpr,
-    ShRExp<Bs::Ret, NumRet<SubExp<N, _1>>, _Base>: NumExpr,
+    ShRExp<BH::Ret, NumRet<SubExp<N, _1>>, _Base>: NumExpr,
 {
-    type Ret = NumRet<ShRExp<Bs::Ret, NumRet<SubExp<N, _1>>, _Base>>;
+    type Ret = NumRet<ShRExp<BH::Ret, NumRet<SubExp<N, _1>>, _Base>>;
 }
 impl<N> NumExpr for ShRExp<U1, N, _Base>
 where
@@ -83,15 +83,15 @@ mod test {
     fn eval_shr() {
         const _1_ShR_1: () = _b0::<ShRExp<U1, U1>>();
         const _1_ShR_0: () = _b1::<ShRExp<U1, U0>>();
-        const _10_ShR_0: () = _b2::<ShRExp<BitString<_1, _0>, U0>>();
-        const _11_ShR_0: () = _b3::<ShRExp<BitString<_1, _1>, U0>>();
-        const _10_ShR_1: () = _b1::<ShRExp<BitString<_1, _0>, U1>>();
-        const _11_ShR_1: () = _b1::<ShRExp<BitString<_1, _1>, U1>>();
+        const _10_ShR_0: () = _b2::<ShRExp<B<_1, _0>, U0>>();
+        const _11_ShR_0: () = _b3::<ShRExp<B<_1, _1>, U0>>();
+        const _10_ShR_1: () = _b1::<ShRExp<B<_1, _0>, U1>>();
+        const _11_ShR_1: () = _b1::<ShRExp<B<_1, _1>, U1>>();
 
         const ___11_ShR_2: () = _b0::<ShRExp<U3, U2>>();
         const _1001_ShR_3: () = _b1::<ShRExp<U9, U3>>();
-        // const _MSB_10: () = _b1::<MSB<BitString<_1, _0>>>();
-        // const _MSB_11: () = _b1::<MSB<BitString<_1, _1>>>();
-        // const _MSB_100: () = _b1::<MSB<BitString<BitString<_1, _0>, _1>>>();
+        // const _MSB_10: () = _b1::<MSB<B<_1, _0>>>();
+        // const _MSB_11: () = _b1::<MSB<B<_1, _1>>>();
+        // const _MSB_100: () = _b1::<MSB<B<B<_1, _0>, _1>>>();
     }
 }

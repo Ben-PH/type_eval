@@ -5,7 +5,8 @@ use crate::{
     _inners::{_BitLit, _BitStrLit, _ExprMode, _Recurse},
 };
 
-pub trait NumberVal {}
+pub trait NumberVal: NumExpr {}
+pub trait NonZero: NumberVal {}
 
 /// Literal representation of the 0-bit
 pub struct _0;
@@ -22,6 +23,7 @@ pub struct B<Bs, B, M: _ExprMode = _Recurse> {
 impl NumberVal for _0 {}
 /// A [`NumExpr`] can output type-expressed `1`
 impl NumberVal for _1 {}
+impl NonZero for _1 {}
 /// A [`NumExpr`] can output type-expressed `0bxxxx`
 impl<Bs, Bt> NumberVal for B<Bs, Bt>
 where
@@ -29,6 +31,7 @@ where
     Bt: _BitLit,
 {
 }
+impl<Bs, Bt> NonZero for B<Bs, Bt> where B<Bs, Bt>: NumberVal {}
 
 /// Trims 0-leading bitstrings semi-automagically
 impl<Bt> NumExpr for B<_0, Bt>

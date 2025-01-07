@@ -40,6 +40,7 @@ mod test {
     use super::*;
     use crate::{
         num_vals::{U0, U1, U2, U3, U4, U5, U6, U7},
+        prelude::{AddExp, SubExp},
         test_res::*,
     };
     #[test]
@@ -56,5 +57,9 @@ mod test {
         const _7_LCM_3: () = _b21::<LcmExp<U7, U3>>();
         const _7_LCM_5: () = _b35::<LcmExp<U7, U5>>();
         const _3_LCM_3: () = _b3::<LcmExp<U3, U3>>();
+    }
+    #[test]
+    fn eval_lcm_nested() {
+        const _3ADD4_LCM_5: () = _b35::<LcmExp<AddExp<U3, U4>, SubExp<U6, U1>>>();
     }
 }

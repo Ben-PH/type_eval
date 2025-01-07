@@ -10,14 +10,15 @@ where
 }
 
 #[cfg(test)]
+#[allow(clippy::used_underscore_items)]
 mod test {
     use super::*;
     use crate::{
         num_vals::{U0, U1, U2, U3, U4, U5, U6, U7},
+        op_types::{AddExp, SubExp},
         test_res::*,
     };
     #[test]
-    #[allow(clippy::used_underscore_items)]
     fn eval_lt() {
         const _0_LT_0: () = _f::<LT<U0, U0>>();
         const _1_LT_0: () = _f::<LT<U1, U0>>();
@@ -34,5 +35,10 @@ mod test {
         const _3_LT_3: () = _f::<LT<U3, U3>>();
         const _6_LT_1: () = _f::<LT<U6, U1>>();
         const _7_LT_1: () = _f::<LT<U7, U1>>();
+    }
+    #[test]
+    fn eval_lt_nested() {
+        const _6_LT_1ADD1: () = _f::<LT<U6, AddExp<U1, U1>>>();
+        const _4SUB1SUB1_LT_5ADD3: () = _t::<LT<SubExp<SubExp<U4, U1>, U1>, AddExp<U5, U3>>>();
     }
 }
