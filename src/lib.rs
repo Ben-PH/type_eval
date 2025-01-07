@@ -164,6 +164,9 @@ pub mod val_types;
 pub mod num_vals {
     include!(concat!(env!("OUT_DIR"), "/consts.rs"));
 }
+pub mod op_macro {
+    include!(concat!(env!("OUT_DIR"), "/op.rs"));
+}
 mod expr;
 
 /// Inner implementation types. Generally not intended for end-use
