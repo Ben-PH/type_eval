@@ -147,14 +147,14 @@ where
     }
 }
 #[cfg(test)]
+#[allow(non_upper_case_globals)]
+#[allow(clippy::used_underscore_items)]
 mod test {
     use super::*;
     use crate::{
         num_vals::{U0, U1, U2, U3, U4, U6, U7},
         test_res::*,
     };
-    #[allow(non_upper_case_globals)]
-    #[allow(clippy::used_underscore_items)]
     #[test]
     fn eval_add() {
         const _0_ADD_0: () = _b0::<AddExp<U0, U0>>();

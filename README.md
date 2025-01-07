@@ -36,10 +36,9 @@ fn thing<E: NumExpr>() {
 }
 
 fn main() {
-    // todo: actually impl the op! macro:
-    // do_thing::<op!(((X + 4) * Y) / Z)>();
-    // ...which would expand to:
-    do_thing::<Div<Mul<Add<X, U4>, Y>, Z>>();
+    do_thing::<op!(((X + 4) * Y) / Z)>();
+    // Expands to:
+    // do_thing::<Div<Mul<Add<X, U4>, Y>, Z>>();
 }
 ```
 
@@ -59,15 +58,17 @@ The error output is in a messy binary form. The plan is to make this more readab
 
 In _very_ approximate order of priority:
 
-- Runtime number expression
-- Robust property/fuzz testing
-- negative numbers
-- Move from binary to decimal representation
-- More readable errors
-- implementation of an `op` macro (replace `IF<LT<X, Y>, Add<Div<X, U2>, Y>, Z>` with `op!(if X < Y {(X + 2)/ Y} else {Z})`)
-- Explore use of `struct U238...` instead of `type U238 = ...`
-- Usable in place of a `usize` type in declaring array lengths.
-- `match` expression impl
-- closure expression impl
-- any-type expression (i.e. Bool/Num/Ord expressions all impl the generic expression)
-- Upstreaming into a nursary/nightly feature.
+- [x] Runtime number expression
+- [ ] Robust property/fuzz testing
+- [ ] negative numbers
+- [ ] Move from binary to decimal representation
+- [ ] More readable errors
+- [x] implementation of an `op` macro (replace `IF<LT<X, Y>, Add<Div<X, U2>, Y>, Z>` with `op!(if X < Y {(X + 2)/ Y} else {Z})`)
+- [ ] Explore use of `struct U238...` instead of `type U238 = ...`
+- [ ] Usable in place of a `usize` type in declaring array lengths.
+- [ ] `match` expression impl
+- [ ] closure expression impl
+- [ ] any-type expression (i.e. Bool/Num/Ord expressions all impl the generic expression)
+- [ ] Upstreaming into a nursary/nightly feature.
+- [ ] Partial evaluation, with generated functinos filling the gaps
+- [ ] POC/Demonstrator to provide haskell-like side-effect monad idioms

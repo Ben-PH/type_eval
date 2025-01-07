@@ -1,7 +1,9 @@
+mod op;
 use core::fmt;
 use std::{env, fs::File, io::Write, path::Path};
 
 use bitvec::{order::Lsb0, vec::BitVec};
+use op::write_op_macro;
 const HIGHEST: u64 = 1024;
 fn uints() -> impl Iterator<Item = u64> {
     let first2: u32 = 11; // (highest as f64).log(2.0).round() as u32 + 1;
@@ -88,4 +90,5 @@ use crate::prelude::*;
     for u in uints() {
         writeln!(f, "    pub type U{} = {};", u, gen_uint(u)).unwrap();
     }
+    write_op_macro().unwrap();
 }
